@@ -2,8 +2,8 @@ TEX := higher-coherences.tex
 PDF := $(TEX:.tex=.pdf)
 BASE := $(basename $(TEX))
 
-LATEX := pdflatex
-LATEXFLAGS := -interaction=nonstopmode -halt-on-error
+LATEXMK := latexmk
+LATEXMKFLAGS := -pdf -interaction=nonstopmode -halt-on-error -file-line-error
 
 AUXFILES := \
 	$(BASE).aux \
@@ -27,8 +27,7 @@ AUXFILES := \
 all: $(PDF)
 
 $(PDF): $(TEX)
-	$(LATEX) $(LATEXFLAGS) $(TEX)
-	$(LATEX) $(LATEXFLAGS) $(TEX)
+	$(LATEXMK) $(LATEXMKFLAGS) $(TEX)
 
 clean:
 	rm -f $(PDF) $(AUXFILES)

@@ -2,7 +2,21 @@ name: Build PDF
 
 on:
   push:
+    paths:
+      - "**/*.tex"
+      - "**/*.bib"
+      - "**/*.cls"
+      - "**/*.sty"
+      - "Makefile"
+      - ".github/workflows/build-pdf.yml"
   pull_request:
+    paths:
+      - "**/*.tex"
+      - "**/*.bib"
+      - "**/*.cls"
+      - "**/*.sty"
+      - "Makefile"
+      - ".github/workflows/build-pdf.yml"
   workflow_dispatch:
 
 permissions:
@@ -27,7 +41,7 @@ jobs:
             texlive-pictures
 
       - name: Build PDF
-        run: latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error higher-coherences.tex
+        run: make
 
       - name: Upload PDF
         uses: actions/upload-artifact@v4
@@ -35,4 +49,3 @@ jobs:
           name: higher-coherences-pdf
           path: higher-coherences.pdf
           if-no-files-found: error
-
