@@ -34,6 +34,7 @@ to be made explicit in a future version of the construction beyond
 
 # Coherences
 
+```
 δ-δ r q γ β (r ≤ q ≤ k):
   δ r γ ∘ δ q+1 β =
   δ q β ∘ δ r γ
@@ -64,11 +65,13 @@ to be made explicit in a future version of the construction beyond
 ε↑-ε↑ r q (q ≤ r ≤ p):
   ε↑ r+1 ∘ ε↑ q =
   ε↑ q   ∘ ε↑ r
+```
 
 # Higher coherences
 
 ## δ-δ
 
+```
 s ≤ r ≤ q ≤ k
 
 δ-δ r+1 q+1 γ β • δ-δ s q α β   • δ-δ s r α γ =[UIP]=
@@ -83,9 +86,11 @@ s ≤ r ≤ q ≤ k
 δ r γ ∘ δ s α   ∘ δ q+2 β =[δ-δ s q+1 α β]=
 δ r γ ∘ δ q+1 β ∘ δ s α   =[δ-δ r q γ β]=
 δ q β ∘ δ r γ   ∘ δ s α
+```
 
 ## δ-ε↓-id
 
+```
 s ≤ r ≤ k
 
 δ-ε↓-id r+1 β =[UIP]=
@@ -98,9 +103,11 @@ s ≤ r ≤ k
 δ r β ∘ δ s α   ∘ ε↓ r+1 =[δ-ε↓-inf s r α]=
 δ r β ∘ ε↓ r    ∘ δ s α  =[δ-ε↓-id r β]=
 δ s α
+```
 
 ## δ-ε↓-inf
 
+```
 s ≤ r ≤ q ≤ k
 
 δ-ε↓-inf r+1 q+1 β • δ-ε↓-inf s q α   • δ-δ s r α β =[UIP]=
@@ -115,9 +122,11 @@ s ≤ r ≤ q ≤ k
 δ r β ∘ δ s α   ∘ ε↓ q+2 =[δ-ε↓-inf s q+1 α]=
 δ r β ∘ ε↓ q+1  ∘ δ s α  =[δ-ε↓-inf r q β]=
 ε↓ q  ∘ δ r β   ∘ δ s α
+```
 
 ## δ-ε↓-sup
 
+```
 s ≤ q ≤ r ≤ k
 
 δ-ε↓-sup r+1 q+1 β • δ-ε↓-inf s q α • δ-δ s r α β =[UIP]=
@@ -132,9 +141,11 @@ s ≤ q ≤ r ≤ k
 δ r+1 β ∘ δ s α   ∘ ε↓ q+1 =[δ-ε↓-inf s q α]=
 δ r+1 β ∘ ε↓ q    ∘ δ s α  =[δ-ε↓-sup r q β]=
 ε↓ q    ∘ δ r β   ∘ δ s α
+```
 
 ## δ-ε↑-sup (S)
 
+```
 q ≤ p, s ≤ r ≤ k
 
 δ-ε↑-sup r+1 q β • δ-ε↑-sup s q α • δ-δ s r α β =[UIP]=
@@ -149,9 +160,11 @@ q ≤ p, s ≤ r ≤ k
 δ r β ∘ δ s α   ∘ ε↑ q  =[δ-ε↑-sup s q α]=
 δ r β ∘ ε↑ q    ∘ δ s α =[δ-ε↑-sup r q β]=
 ε↑ q  ∘ δ r β   ∘ δ s α
+```
 
 ## δ-ε↑-sup (0)
 
+```
 s ≤ r ≤ k
 
 δ-ε↓-sup r s β • δ-ε↓-id s α =[UIP]=
@@ -164,9 +177,11 @@ s ≤ r ≤ k
 δ s α ∘ δ r+1 β ∘ ε↓ s =[δ-δ s r α β]=
 δ r β ∘ δ s α   ∘ ε↓ s =[δ-ε↓-id s α]=
 δ r β
+```
 
 ## ε↓-ε↓
 
+```
 s ≤ q ≤ r ≤ k
 
 ε↓-ε↓ r+1 q+1    • δ-ε↓-inf s q α • δ-ε↓-inf s r α =[UIP]=
@@ -181,9 +196,11 @@ s ≤ q ≤ r ≤ k
 ε↓ r+1 ∘ δ s α  ∘ ε↓ q+1 =[δ-ε↓-inf s q α]=
 ε↓ r+1 ∘ ε↓ q   ∘ δ s α  =[ε↓-ε↓ r q]=
 ε↓ q   ∘ ε↓ r   ∘ δ s α
+```
 
 ## ε↓-ε↑ (S)
 
+```
 q ≤ p, s ≤ r ≤ k
 
 ε↓-ε↑ r+1 q    • δ-ε↑-sup s q α • δ-ε↓-inf s r α =[UIP]=
@@ -198,9 +215,11 @@ q ≤ p, s ≤ r ≤ k
 ε↓ r  ∘ δ s α  ∘ ε↑ q  =[δ-ε↑-sup s q α]=
 ε↓ r  ∘ ε↑ q   ∘ δ s α =[ε↓-ε↑ r q]=
 ε↑ q  ∘ ε↓ r   ∘ δ s α
+```
 
 ## ε↓-ε↑ (0)
 
+```
 s ≤ r ≤ k
 
 ε↓-ε↓ r s      • δ-ε↓-id s α =[UIP]=
@@ -213,9 +232,11 @@ s ≤ r ≤ k
 δ s α ∘ ε↓ r+1 ∘ ε↓ s =[δ-ε↓-inf s r α]=
 ε↓ r  ∘ δ s α  ∘ ε↓ s =[δ-ε↓-id s α]=
 ε↓ r
+```
 
 ## ε↑-ε↑ (S)
 
+```
 q ≤ r ≤ p, s ≤ k
 
 ε↑-ε↑ r q        • δ-ε↑-sup s q α • δ-ε↑-sup s r α =[UIP]=
@@ -230,9 +251,11 @@ q ≤ r ≤ p, s ≤ k
 ε↑ r+1 ∘ δ s α  ∘ ε↑ q  =[δ-ε↑-sup s q α]=
 ε↑ r+1 ∘ ε↑ q   ∘ δ s α =[ε↑-ε↑ r q]=
 ε↑ q   ∘ ε↑ r   ∘ δ s α
+```
 
 ## ε↑-ε↑ (0)
 
+```
 r ≤ p, s ≤ k
 
 δ-ε↓-id s α =[UIP]=
@@ -245,3 +268,4 @@ r ≤ p, s ≤ k
 δ s α ∘ ε↑ r  ∘ ε↓ s =[δ-ε↑-sup s r α]=
 ε↑ r  ∘ δ s α ∘ ε↓ s =[δ-ε↓-id s α]=
 ε↑ r
+```
