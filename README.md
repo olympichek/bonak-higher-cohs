@@ -26,11 +26,11 @@ to be made explicit in a future version of the construction beyond
 
 # Notation
 
-- Restrictions, i.e. faces, are denoted by δ.
-- Reflexivities, i.e. degeneracies, are denoted by ε.
-- Reflexivities "above" and "below" are distinguished by the superscripts ↑ and ↓.
-- The superscript α, β, γ denotes the arity.
-- The subscript q, r, s denotes the direction.
+- Restrictions, i.e. faces, are denoted by `δ`.
+- Reflexivities, i.e. degeneracies, are denoted by `ε`.
+- Reflexivities "above" and "below" are distinguished by the superscripts `↑` and `↓`.
+- The superscript `α`, `β`, `γ` denotes the arity.
+- The subscript `q`, `r`, `s` denotes the direction.
 
 # Coherences
 
