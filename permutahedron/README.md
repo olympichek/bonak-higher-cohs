@@ -188,7 +188,7 @@ The `δ-δ` permutahedron coherence is the equality of the two homotopies above:
   δ-δ-hex(t, s, r, α, ζ, γ) •
   δ-δ-hex(t, s, q, α, ζ, β) •
   δ-δ-sq(r+2, q+2, γ, β; t s α ζ) •
-  δ-δ-sq(s q ζ β; t r+1 α γ) •
+  δ-δ-sq(s, q, ζ, β; t, r+1, α, γ) •
   δ-δ-hex(t, r+1, q+1, α, γ, β) •
   δ-δ-hex(s, r, q, ζ, γ, β) •
   δ-δ-sq(t, q+2, α, β; s, r, ζ, γ)
