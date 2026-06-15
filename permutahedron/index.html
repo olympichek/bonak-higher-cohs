@@ -527,7 +527,9 @@
       active: null,
       autoRotate: false,
       pointer: new THREE.Vector2(10, 10),
-      pointerInside: false
+      pointerInside: false,
+      rotationActive: false,
+      pendingHoverRefresh: false
     };
     const touchInteraction = {
       touches: new Map(),
@@ -1225,7 +1227,14 @@
     }
 
     function handlePointerDown(event) {
-      if (event.pointerType !== "touch") return;
+      if (event.pointerType !== "touch") {
+        if (event.button !== 0 && event.button !== 1 && event.button !== 2) return;
+        setPointerFromClient(event.clientX, event.clientY);
+        view.pointerInside = clientPointInsideCanvas(event.clientX, event.clientY);
+        beginRotationInteraction();
+        return;
+      }
+
       touchInteraction.touches.set(event.pointerId, {
         x: event.clientX,
         y: event.clientY
@@ -1273,11 +1282,16 @@
       }
 
       setPointerFromClient(event.clientX, event.clientY);
-      view.pointerInside = true;
+      view.pointerInside = clientPointInsideCanvas(event.clientX, event.clientY);
     }
 
     function handlePointerUp(event) {
-      if (event.pointerType !== "touch") return;
+      if (event.pointerType !== "touch") {
+        setPointerFromClient(event.clientX, event.clientY);
+        view.pointerInside = clientPointInsideCanvas(event.clientX, event.clientY);
+        endRotationInteraction();
+        return;
+      }
 
       const tap = touchInteraction.tap;
       const isTap = tap &&
@@ -1309,7 +1323,12 @@
     }
 
     function handlePointerCancel(event) {
-      if (event.pointerType !== "touch") return;
+      if (event.pointerType !== "touch") {
+        view.pointerInside = false;
+        endRotationInteraction();
+        return;
+      }
+
       touchInteraction.touches.delete(event.pointerId);
       if (touchInteraction.touches.size === 0) {
         touchInteraction.hoverSuspended = false;
@@ -1328,6 +1347,7 @@
     function handlePointerLeave(event) {
       if (event.pointerType === "touch") return;
       view.pointerInside = false;
+      if (view.rotationActive) return;
       clearHover();
     }
 
@@ -1337,10 +1357,16 @@
       view.pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
     }
 
+    function clientPointInsideCanvas(clientX, clientY) {
+      const rect = renderer.domElement.getBoundingClientRect();
+      return clientX >= rect.left && clientX <= rect.right &&
+        clientY >= rect.top && clientY <= rect.bottom;
+    }
+
     function selectAtClientPoint(clientX, clientY) {
       setPointerFromClient(clientX, clientY);
       view.pointerInside = true;
-      updateHover();
+      updateHover({ force: true });
       view.pointerInside = false;
     }
 
@@ -1416,8 +1442,19 @@
       toggles.auto.checked = false;
     }
 
-    function updateHover() {
-      if (touchInteraction.hoverSuspended || !view.pointerInside) return;
+    function beginRotationInteraction() {
+      view.rotationActive = true;
+      view.pendingHoverRefresh = false;
+    }
+
+    function endRotationInteraction() {
+      if (!view.rotationActive) return;
+      view.rotationActive = false;
+      view.pendingHoverRefresh = true;
+    }
+
+    function updateHover({ force = false } = {}) {
+      if (!force && (view.rotationActive || touchInteraction.hoverSuspended || !view.pointerInside)) return;
       raycaster.setFromCamera(view.pointer, camera);
       const selection = pickSelection();
       if (!selection) {
@@ -2038,7 +2075,16 @@
         root.rotateY(0.006);
       }
       controls.update();
-      updateHover();
+      if (view.pendingHoverRefresh) {
+        view.pendingHoverRefresh = false;
+        if (view.pointerInside) {
+          updateHover({ force: true });
+        } else {
+          clearHover();
+        }
+      } else {
+        updateHover();
+      }
       renderer.render(scene, camera);
     }
   </script>
