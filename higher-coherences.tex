@@ -28,6 +28,7 @@
 \newcommand{\termone}[1]{#1}
 \newcommand{\termtwo}[2]{#1 \comp #2}
 \newcommand{\termthree}[3]{#1 \comp #2 \comp #3}
+\newcommand{\termfour}[4]{#1 \comp #2 \comp #3 \comp #4}
 \newcommand{\fitdiagram}[1]{\makebox[\textwidth][c]{\resizebox{0.74\textwidth}{!}{#1}}}
 \newcommand{\fithexdiagram}[1]{\makebox[\textwidth][c]{\hspace*{-0.025\textwidth}\resizebox{1.05\textwidth}{!}{#1}}}
 \newcommand{\centerslidediagram}[1]{%
@@ -188,7 +189,7 @@ $\epsu{r+1} \comp \epsu{q}$ & $=$ & $\epsu{q} \comp \epsu{r}$
 \end{tabular}
 \end{frame}
 
-\begin{frame}{$\delta$-$\delta$}
+\begin{frame}{$\delta$-$\delta$-hex}
 \centerslidediagram{
   \fithexdiagram{\HexTermCohDiagram
     {\termthree{\del{s}{\alpha}}{\del{r+1}{\gamma}}{\del{q+2}{\beta}}}
@@ -199,6 +200,20 @@ $\epsu{r+1} \comp \epsu{q}$ & $=$ & $\epsu{q} \comp \epsu{r}$
     {\termthree{\del{r}{\gamma}}{\del{s}{\alpha}}{\del{q+2}{\beta}}}
     {{\HCdd{r+1}{q+1}{\gamma}{\beta}}{\HCdd{s}{q}{\alpha}{\beta}}{\HCdd{s}{r}{\alpha}{\gamma}}}
     {{\HCdd{s}{r}{\alpha}{\gamma}}{\HCdd{s}{q+1}{\alpha}{\beta}}{\HCdd{r}{q}{\gamma}{\beta}}}}
+}
+\end{frame}
+
+\begin{frame}{$\delta$-$\delta$-sq}
+\centerslidediagram{
+  \fitdiagram{\SquareTermCohDiagram
+    {\termfour{\del{t}{\alpha}}{\del{s+1}{\zeta}}{\del{r+2}{\gamma}}{\del{q+3}{\beta}}}
+    {\termfour{\del{t}{\alpha}}{\del{s+1}{\zeta}}{\del{q+2}{\beta}}{\del{r+2}{\gamma}}}
+    {\termfour{\del{s}{\zeta}}{\del{t}{\alpha}}{\del{r+2}{\gamma}}{\del{q+3}{\beta}}}
+    {\termfour{\del{s}{\zeta}}{\del{t}{\alpha}}{\del{q+2}{\beta}}{\del{r+2}{\gamma}}}
+    {\HCdd{r+2}{q+2}{\gamma}{\beta}}
+    {\HCdd{t}{s}{\alpha}{\zeta}}
+    {\HCdd{t}{s}{\alpha}{\zeta}}
+    {\HCdd{r+2}{q+2}{\gamma}{\beta}}}
 }
 \end{frame}
 

@@ -69,7 +69,7 @@ to be made explicit in a future version of the construction beyond
 
 # Higher coherences
 
-## δ-δ
+## δ-δ-hex
 
 ```
 s ≤ r ≤ q ≤ k
@@ -86,6 +86,23 @@ s ≤ r ≤ q ≤ k
 δ r γ ∘ δ s α   ∘ δ q+2 β =[δ-δ s q+1 α β]=
 δ r γ ∘ δ q+1 β ∘ δ s α   =[δ-δ r q γ β]=
 δ q β ∘ δ r γ   ∘ δ s α
+```
+
+## δ-δ-sq
+
+```
+t ≤ s ≤ r ≤ q ≤ k
+
+δ-δ r+2 q+2 γ β • δ-δ t s α ζ =[UIP]=
+δ-δ t s α ζ     • δ-δ r+2 q+2 γ β
+
+δ t α ∘ δ s+1 ζ ∘ δ r+2 γ ∘ δ q+3 β =[δ-δ r+2 q+2 γ β]=
+δ t α ∘ δ s+1 ζ ∘ δ q+2 β ∘ δ r+2 γ =[δ-δ t s α ζ]=
+δ s ζ ∘ δ t α   ∘ δ q+2 β ∘ δ r+2 γ
+
+δ t α ∘ δ s+1 ζ ∘ δ r+2 γ ∘ δ q+3 β =[δ-δ t s α ζ]=
+δ s ζ ∘ δ t α   ∘ δ r+2 γ ∘ δ q+3 β =[δ-δ r+2 q+2 γ β]=
+δ s ζ ∘ δ t α   ∘ δ q+2 β ∘ δ r+2 γ
 ```
 
 ## δ-ε↓-id
