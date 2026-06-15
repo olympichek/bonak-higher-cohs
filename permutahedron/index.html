@@ -186,6 +186,17 @@
       letter-spacing: 0;
     }
 
+    .stats h1 a {
+      color: #2f6fed;
+      text-decoration: none;
+    }
+
+    .stats h1 a:hover,
+    .stats h1 a:focus-visible {
+      text-decoration: underline;
+      outline: none;
+    }
+
     .metric-row,
     .legend-row {
       display: flex;
@@ -441,7 +452,7 @@
 
   <aside class="side-panel" aria-label="Permutahedron metadata">
     <section class="stats" aria-label="Permutahedron data">
-      <h1>P<sub>4</sub> permutahedron</h1>
+      <h1>P<sub>4</sub> permutahedron (<a href="https://github.com/olympichek/bonak-higher-cohs/blob/main/permutahedron/README.md" target="_blank" rel="noopener noreferrer">about</a>)</h1>
       <div class="metric-row">
         <span class="metric" id="vertex-count">24 vertices</span>
         <span class="metric" id="edge-count">36 edges</span>
