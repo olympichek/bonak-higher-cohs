@@ -1,0 +1,2044 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Permutahedron P4</title>
+  <link rel="stylesheet" href="./vendor/katex/katex.min.css">
+  <style>
+    :root {
+      color: #17191c;
+      background: #f4f6f8;
+      font-family:
+        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      font-size: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      background: #f4f6f8;
+    }
+
+    #scene {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: 50vw;
+      border-right: 1px solid rgba(23, 25, 28, 0.12);
+      touch-action: none;
+    }
+
+    .side-panel {
+      position: fixed;
+      inset: 0 0 0 auto;
+      z-index: 2;
+      width: 50vw;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px;
+      overflow: auto;
+      background: #f4f6f8;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .toolbar,
+    .stats,
+    .hover-badge,
+    .formula-panel {
+      z-index: 2;
+      color: #17191c;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(30, 33, 37, 0.14);
+      border-radius: 8px;
+      box-shadow: 0 12px 30px rgba(31, 35, 40, 0.12);
+      backdrop-filter: blur(14px);
+    }
+
+    .toolbar {
+      position: sticky;
+      bottom: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      margin-top: auto;
+      padding: 10px;
+    }
+
+    .switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 0 8px;
+      color: #2b2f36;
+      font-size: 0.875rem;
+      font-weight: 650;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .switch input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+
+    .switch-mark {
+      position: relative;
+      width: 38px;
+      height: 22px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(23, 25, 28, 0.24);
+      border-radius: 999px;
+      background: #d9dee5;
+      transition: background 140ms ease, border-color 140ms ease;
+    }
+
+    .switch-mark::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #ffffff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.22);
+      transition: transform 140ms ease;
+    }
+
+    .switch input:checked + .switch-mark {
+      border-color: rgba(46, 117, 116, 0.62);
+      background: #55aaa5;
+    }
+
+    .switch input:checked + .switch-mark::after {
+      transform: translateX(16px);
+    }
+
+    .range {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 0 8px;
+      color: #2b2f36;
+      font-size: 0.875rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .range input {
+      width: 108px;
+      accent-color: #b95d4f;
+    }
+
+    button {
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid rgba(23, 25, 28, 0.18);
+      border-radius: 8px;
+      color: #17191c;
+      background: #ffffff;
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover,
+    button:focus-visible {
+      border-color: rgba(23, 25, 28, 0.34);
+      background: #eef1f5;
+      outline: none;
+    }
+
+    .stats {
+      display: grid;
+      gap: 8px;
+      min-width: 238px;
+      padding: 12px;
+    }
+
+    .stats h1 {
+      margin: 0;
+      font-size: 1.02rem;
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .metric-row,
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .metric,
+    .legend {
+      min-height: 26px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 8px;
+      border: 1px solid rgba(23, 25, 28, 0.10);
+      border-radius: 7px;
+      background: rgba(246, 248, 250, 0.88);
+      color: #2b2f36;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      box-shadow: inset 0 0 0 1px rgba(23, 25, 28, 0.18);
+    }
+
+    .swatch-square {
+      background: #54aaa4;
+    }
+
+    .swatch-hex {
+      background: #e76f5f;
+    }
+
+    .swatch-blue {
+      background: #2f6fed;
+    }
+
+    .swatch-red {
+      background: #d33c33;
+    }
+
+    .hover-badge {
+      min-width: 148px;
+      padding: 10px 12px;
+      font-size: 0.86rem;
+      font-weight: 750;
+      text-align: left;
+    }
+
+    .hover-badge[hidden] {
+      display: none;
+    }
+
+    .formula-panel {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      overflow: visible;
+    }
+
+    .formula-kind {
+      color: #5c6570;
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .formula-main {
+      padding: 10px;
+      border: 1px solid rgba(23, 25, 28, 0.11);
+      border-radius: 7px;
+      background: rgba(246, 248, 250, 0.9);
+      color: #17191c;
+      font-size: 1.02rem;
+      font-weight: 750;
+      line-height: 1.45;
+      overflow-x: auto;
+    }
+
+    .formula-rows {
+      display: grid;
+      gap: 6px;
+    }
+
+    .formula-row {
+      color: #2b2f36;
+      font-size: 0.86rem;
+      font-weight: 650;
+      line-height: 1.4;
+      overflow-x: auto;
+    }
+
+    .formula-row-label {
+      margin-right: 0.35rem;
+      color: #5c6570;
+      font-weight: 850;
+    }
+
+    .formula-row-label.blue {
+      color: #2f6fed;
+    }
+
+    .formula-row-label.red {
+      color: #d33c33;
+    }
+
+    .formula-main .katex-display {
+      margin: 0;
+    }
+
+    .formula-main .katex {
+      font-size: 1.05em;
+    }
+
+    .formula-row .katex {
+      font-size: 1.08em;
+    }
+
+    .formula-diagram {
+      min-height: 348px;
+      padding: 10px;
+      border: 1px solid rgba(23, 25, 28, 0.11);
+      border-radius: 7px;
+      background: rgba(246, 248, 250, 0.9);
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .formula-diagram[hidden] {
+      display: none;
+    }
+
+    .coherence-diagram {
+      position: relative;
+      width: 100%;
+      min-width: 620px;
+      height: 330px;
+    }
+
+    .coherence-diagram.square {
+      min-width: 620px;
+    }
+
+    .coherence-diagram svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .diagram-node,
+    .diagram-edge-label {
+      position: absolute;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(23, 25, 28, 0.12);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 4px 14px rgba(31, 35, 40, 0.08);
+      white-space: nowrap;
+    }
+
+    .diagram-node {
+      z-index: 3;
+      padding: 6px 8px;
+      font-size: 0.68rem;
+      font-weight: 650;
+    }
+
+    .diagram-edge-label {
+      z-index: 2;
+      padding: 3px 5px;
+      font-size: 0.61rem;
+      font-weight: 700;
+    }
+
+    .diagram-downarrow {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      color: #353b44;
+      font-size: 1.25rem;
+      font-weight: 750;
+      pointer-events: none;
+    }
+
+    @media (max-width: 720px) {
+      body {
+        overflow: auto;
+      }
+
+      #scene {
+        position: relative;
+        width: 100vw;
+        height: 52vh;
+        min-height: 390px;
+        border-right: 0;
+        border-bottom: 1px solid rgba(23, 25, 28, 0.12);
+      }
+
+      .side-panel {
+        position: relative;
+        width: 100vw;
+        min-height: 48vh;
+        overflow: visible;
+        padding: 12px;
+      }
+
+      .stats {
+        min-width: 0;
+      }
+
+      .toolbar {
+        bottom: 12px;
+      }
+
+      .formula-panel {
+        overflow: visible;
+      }
+
+      .hover-badge {
+        min-width: 0;
+      }
+
+      .range input {
+        width: 92px;
+      }
+
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./vendor/three/three.module.js",
+        "three/addons/": "./vendor/three/addons/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <main id="scene" aria-label="3D permutahedron"></main>
+
+  <aside class="side-panel" aria-label="Permutahedron metadata">
+    <section class="stats" aria-label="Permutahedron data">
+      <h1>P<sub>4</sub> permutahedron</h1>
+      <div class="metric-row">
+        <span class="metric" id="vertex-count">24 vertices</span>
+        <span class="metric" id="edge-count">36 edges</span>
+        <span class="metric" id="face-count">14 faces</span>
+      </div>
+      <div class="legend-row">
+        <span class="legend"><span class="swatch swatch-square"></span>square faces</span>
+        <span class="legend"><span class="swatch swatch-hex"></span>hexagon faces</span>
+        <span class="legend"><span class="swatch swatch-blue"></span>first boundary</span>
+        <span class="legend"><span class="swatch swatch-red"></span>second boundary</span>
+      </div>
+    </section>
+
+    <div id="hover-badge" class="hover-badge" hidden></div>
+
+    <section class="formula-panel" aria-label="Selected formula">
+      <div id="formula-kind" class="formula-kind"></div>
+      <div id="formula-main" class="formula-main"></div>
+      <div id="formula-rows" class="formula-rows"></div>
+      <div id="formula-diagram" class="formula-diagram" hidden></div>
+    </section>
+
+    <nav class="toolbar" aria-label="View controls">
+      <label class="switch">
+        <input id="toggle-faces" type="checkbox" checked>
+        <span class="switch-mark"></span>
+        <span>Faces</span>
+      </label>
+      <label class="switch">
+        <input id="toggle-edges" type="checkbox" checked>
+        <span class="switch-mark"></span>
+        <span>Edges</span>
+      </label>
+      <label class="switch">
+        <input id="toggle-vertices" type="checkbox" checked>
+        <span class="switch-mark"></span>
+        <span>Vertices</span>
+      </label>
+      <label class="switch">
+        <input id="toggle-coherence" type="checkbox" checked>
+        <span class="switch-mark"></span>
+        <span>3-cell</span>
+      </label>
+      <label class="switch">
+        <input id="toggle-auto" type="checkbox">
+        <span class="switch-mark"></span>
+        <span>Auto</span>
+      </label>
+      <label class="range">
+        <span>Scale</span>
+        <input id="scale-control" type="range" min="50" max="180" value="100" step="1">
+      </label>
+      <button id="reset-view" type="button">Reset</button>
+    </nav>
+  </aside>
+
+  <script type="module">
+    import * as THREE from "three";
+    import { TrackballControls } from "three/addons/controls/TrackballControls.js";
+    import katex from "./vendor/katex/katex.mjs";
+
+    const host = document.getElementById("scene");
+    const hoverBadge = document.getElementById("hover-badge");
+    const formulaKind = document.getElementById("formula-kind");
+    const formulaMain = document.getElementById("formula-main");
+    const formulaRows = document.getElementById("formula-rows");
+    const formulaDiagram = document.getElementById("formula-diagram");
+    const root = new THREE.Group();
+    const TRACKBALL_ROTATE_SPEED = 1.75;
+    const TOUCH_SCALE_SPEED = 0.74;
+    const TOUCH_TWIST_SPEED = 1.15;
+    const DIAGRAM_PATH_COLORS = ["#245c5a", "#5b496f"];
+    const DIAGRAM_ARROW_STROKE_WIDTH = "1.28";
+    const FACE_PATH_EDGE_SCALE = {
+      body: 1.75,
+      head: 1.24
+    };
+    const TAP_MOVE_LIMIT = 12;
+    const TAP_TIME_LIMIT = 650;
+    const view = {
+      width: 0,
+      height: 0,
+      active: null,
+      autoRotate: false,
+      pointer: new THREE.Vector2(10, 10),
+      pointerInside: false
+    };
+    const touchInteraction = {
+      touches: new Map(),
+      hoverSuspended: false,
+      tap: null,
+      pinchDistance: 0,
+      twistAngle: null,
+      twistDelta: 0
+    };
+    const facePathEdgeMaterials = DIAGRAM_PATH_COLORS.map(color => new THREE.MeshStandardMaterial({
+      color,
+      roughness: 0.38,
+      metalness: 0.16
+    }));
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf4f6f8);
+    scene.add(root);
+
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    const homeDirection = new THREE.Vector3(5.2, 3.4, 5.8).normalize();
+    camera.position.copy(homeDirection).multiplyScalar(8.55);
+
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      preserveDrawingBuffer: true
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    host.appendChild(renderer.domElement);
+
+    const controls = new TrackballControls(camera, renderer.domElement);
+    controls.noZoom = true;
+    controls.noPan = true;
+    controls.staticMoving = true;
+    controls.dynamicDampingFactor = 0.18;
+    controls.rotateSpeed = TRACKBALL_ROTATE_SPEED;
+    controls.minDistance = 3.2;
+    controls.maxDistance = 28;
+    controls.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
+    controls.mouseButtons.MIDDLE = THREE.MOUSE.ROTATE;
+    controls.mouseButtons.RIGHT = THREE.MOUSE.ROTATE;
+    controls.target.set(0, 0, 0);
+
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xc7d0d8, 1.6);
+    scene.add(hemiLight);
+
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.8);
+    keyLight.position.set(4.6, 6.2, 3.8);
+    keyLight.castShadow = true;
+    keyLight.shadow.mapSize.set(1024, 1024);
+    scene.add(keyLight);
+
+    const fillLight = new THREE.DirectionalLight(0xfff0dc, 1.05);
+    fillLight.position.set(-4, -2, -3);
+    scene.add(fillLight);
+
+    const FIRST_BOUNDARY_WORDS = [
+      "321323", "321232", "312132", "132132",
+      "132312", "123212", "123121", "121321"
+    ];
+    const SECOND_BOUNDARY_WORDS = [
+      "321323", "323123", "232123", "231213",
+      "213213", "213231", "212321", "121321"
+    ];
+
+    const data = buildPermutahedronData();
+    const boundary = buildBoundaryHomotopies(data);
+    const faceMesh = createFaceMesh(data);
+    const edgeGroup = createEdgeGroup(data);
+    const vertexGroup = createVertexGroup(data);
+    const faceHighlight = createFaceHighlight();
+    const coherenceArrowGroup = createCoherenceArrowGroup(data, boundary);
+    root.add(faceMesh, faceHighlight, edgeGroup, vertexGroup, coherenceArrowGroup);
+    window.permutahedronScene = {
+      camera,
+      controls,
+      data,
+      root,
+      boundary,
+      groups: { faceMesh, faceHighlight, edgeGroup, vertexGroup, coherenceArrowGroup },
+      selectFace(faceIndex) {
+        const face = data.faces[faceIndex];
+        clearFacePathHighlight();
+        updateFaceHighlight(face);
+        setFacePathHighlight(face);
+        setFaceFormula(face);
+      },
+      clearSelection: clearHover
+    };
+    setDefaultFormula();
+
+    document.getElementById("vertex-count").textContent = `${data.points.length} vertices`;
+    document.getElementById("edge-count").textContent = `${data.edges.length} edges`;
+    document.getElementById("face-count").textContent = `${data.faces.length} faces`;
+
+    const raycaster = new THREE.Raycaster();
+    const toggles = {
+      faces: document.getElementById("toggle-faces"),
+      edges: document.getElementById("toggle-edges"),
+      vertices: document.getElementById("toggle-vertices"),
+      coherence: document.getElementById("toggle-coherence"),
+      auto: document.getElementById("toggle-auto")
+    };
+    const scaleControl = document.getElementById("scale-control");
+    const resetButton = document.getElementById("reset-view");
+
+    toggles.faces.addEventListener("change", () => {
+      faceMesh.visible = toggles.faces.checked;
+      if (!faceMesh.visible && view.active?.kind === "face") clearHover();
+    });
+    toggles.edges.addEventListener("change", () => {
+      edgeGroup.visible = toggles.edges.checked;
+      if (!edgeGroup.visible && view.active?.kind === "edge") clearHover();
+    });
+    toggles.vertices.addEventListener("change", () => {
+      vertexGroup.visible = toggles.vertices.checked;
+      if (!vertexGroup.visible && view.active?.kind === "vertex") clearHover();
+    });
+    toggles.coherence.addEventListener("change", () => {
+      coherenceArrowGroup.visible = toggles.coherence.checked;
+    });
+    toggles.auto.addEventListener("change", () => {
+      view.autoRotate = toggles.auto.checked;
+    });
+    scaleControl.addEventListener("input", () => {
+      setModelScale(Number(scaleControl.value) / 100, false);
+    });
+    controls.addEventListener("start", stopAutoRotate);
+    resetButton.addEventListener("click", resetView);
+
+    renderer.domElement.addEventListener("wheel", handleWheelScale, { passive: false });
+    renderer.domElement.addEventListener("pointerdown", handlePointerDown);
+    renderer.domElement.addEventListener("pointermove", handlePointerMove);
+    renderer.domElement.addEventListener("pointerup", handlePointerUp);
+    renderer.domElement.addEventListener("pointercancel", handlePointerCancel);
+    renderer.domElement.addEventListener("pointerleave", handlePointerLeave);
+
+    window.addEventListener("resize", resize);
+    resize();
+    resetView();
+    animate();
+
+    function buildPermutahedronData() {
+      const perms = permutations([1, 2, 3, 4]);
+      const points = perms.map(projectPermutation);
+      const edges = adjacentSwapEdges(perms);
+      const faces = hullFaces(points);
+      faces.forEach((face, index) => {
+        face.id = index;
+        face.subset = findFacetSubset(face, perms);
+      });
+      return { perms, points, edges, faces };
+    }
+
+    function buildBoundaryHomotopies(data) {
+      const faceByKey = new Map(data.faces.map((face, index) => [faceKey(face.indices), index]));
+      const permIndex = new Map(data.perms.map((perm, index) => [perm.join(""), index]));
+      return {
+        first: wordsToFaceSteps("first", FIRST_BOUNDARY_WORDS, faceByKey, permIndex),
+        second: wordsToFaceSteps("second", SECOND_BOUNDARY_WORDS, faceByKey, permIndex)
+      };
+    }
+
+    function wordsToFaceSteps(name, words, faceByKey, permIndex) {
+      const steps = [];
+      for (let i = 0; i < words.length - 1; i += 1) {
+        steps.push(wordTransitionToFaceStep(name, i + 1, words[i], words[i + 1], faceByKey, permIndex));
+      }
+      return steps;
+    }
+
+    function wordTransitionToFaceStep(name, step, fromWord, toWord, faceByKey, permIndex) {
+      const start = firstDifferentIndex(fromWord, toWord);
+      const end = lastDifferentIndex(fromWord, toWord) + 1;
+      const prefix = fromWord.slice(0, start);
+      const localFrom = fromWord.slice(start, end);
+      const localTo = toWord.slice(start, end);
+      const indices = [
+        ...wordFaceVertices(prefix, localFrom, permIndex),
+        ...wordFaceVertices(prefix, localTo, permIndex)
+      ];
+      const key = faceKey(indices);
+      const faceIndex = faceByKey.get(key);
+      if (faceIndex === undefined) {
+        throw new Error(`Could not find face for ${fromWord} -> ${toWord}`);
+      }
+      const kind = localFrom.length === 3 ? "δ-δ-hex" : "δ-δ-sq";
+      const kindTex = localFrom.length === 3
+        ? "\\delta\\text{-}\\delta\\text{-}\\mathrm{hex}"
+        : "\\delta\\text{-}\\delta\\text{-}\\mathrm{sq}";
+      return {
+        name,
+        step,
+        fromWord,
+        toWord,
+        prefix,
+        localFrom,
+        localTo,
+        faceIndex,
+        label: `${kind} on ${localFrom} → ${localTo}`,
+        labelTex: `${kindTex}\\text{ on }${localFrom}\\to ${localTo}`
+      };
+    }
+
+    function wordFaceVertices(prefix, localWord, permIndex) {
+      const perm = [1, 2, 3, 4];
+      for (const digit of prefix) applySwapDigit(perm, Number(digit));
+      const indices = [permIndex.get(perm.join(""))];
+      for (const digit of localWord) {
+        applySwapDigit(perm, Number(digit));
+        indices.push(permIndex.get(perm.join("")));
+      }
+      return indices;
+    }
+
+    function applySwapDigit(perm, digit) {
+      const index = digit - 1;
+      [perm[index], perm[index + 1]] = [perm[index + 1], perm[index]];
+    }
+
+    function firstDifferentIndex(left, right) {
+      for (let i = 0; i < left.length; i += 1) {
+        if (left[i] !== right[i]) return i;
+      }
+      return -1;
+    }
+
+    function lastDifferentIndex(left, right) {
+      for (let i = left.length - 1; i >= 0; i -= 1) {
+        if (left[i] !== right[i]) return i;
+      }
+      return -1;
+    }
+
+    function faceKey(indices) {
+      return [...new Set(indices)].sort((left, right) => left - right).join(",");
+    }
+
+    function permutations(values) {
+      if (values.length === 1) return [values];
+      const out = [];
+      for (let i = 0; i < values.length; i += 1) {
+        const head = values[i];
+        const rest = values.slice(0, i).concat(values.slice(i + 1));
+        for (const tail of permutations(rest)) out.push([head, ...tail]);
+      }
+      return out;
+    }
+
+    function projectPermutation(perm) {
+      const c = inversePermutation(perm).map(value => value - 2.5);
+      const scale = 1.12;
+      return new THREE.Vector3(
+        (c[0] - c[1]) / Math.sqrt(2),
+        (c[0] + c[1] - 2 * c[2]) / Math.sqrt(6),
+        (c[0] + c[1] + c[2] - 3 * c[3]) / Math.sqrt(12)
+      ).multiplyScalar(scale);
+    }
+
+    function inversePermutation(perm) {
+      const inverse = [];
+      perm.forEach((value, index) => {
+        inverse[value - 1] = index + 1;
+      });
+      return inverse;
+    }
+
+    function adjacentSwapEdges(perms) {
+      const indexByPermutation = new Map(perms.map((perm, index) => [perm.join(","), index]));
+      const seen = new Set();
+      const edges = [];
+      for (let index = 0; index < perms.length; index += 1) {
+        for (let position = 0; position < perms[index].length - 1; position += 1) {
+          const next = perms[index].slice();
+          [next[position], next[position + 1]] = [next[position + 1], next[position]];
+          const target = indexByPermutation.get(next.join(","));
+          const a = Math.min(index, target);
+          const b = Math.max(index, target);
+          const key = `${a}:${b}`;
+          if (!seen.has(key)) {
+            seen.add(key);
+            edges.push({ start: a, end: b, key, swapIndex: position + 1 });
+          }
+        }
+      }
+      return edges;
+    }
+
+    function findFacetSubset(face, perms) {
+      const n = perms[0].length;
+      for (let mask = 1; mask < (1 << n) - 1; mask += 1) {
+        const subset = [];
+        for (let i = 0; i < n; i += 1) {
+          if (mask & (1 << i)) subset.push(i + 1);
+        }
+        const k = subset.length;
+        const expected = (k * (k + 1)) / 2;
+        const matches = face.indices.every(index => {
+          const coordinates = inversePermutation(perms[index]);
+          return subset.reduce((sum, position) => sum + coordinates[position - 1], 0) === expected;
+        });
+        if (matches) return subset;
+      }
+      return [];
+    }
+
+    function hullFaces(points) {
+      const epsilon = 1e-5;
+      const seen = new Set();
+      const faces = [];
+      const center = new THREE.Vector3();
+      points.forEach(point => center.add(point));
+      center.divideScalar(points.length);
+
+      for (let i = 0; i < points.length - 2; i += 1) {
+        for (let j = i + 1; j < points.length - 1; j += 1) {
+          for (let k = j + 1; k < points.length; k += 1) {
+            const a = new THREE.Vector3().subVectors(points[j], points[i]);
+            const b = new THREE.Vector3().subVectors(points[k], points[i]);
+            const normal = new THREE.Vector3().crossVectors(a, b);
+            if (normal.lengthSq() < epsilon) continue;
+            normal.normalize();
+
+            const offset = normal.dot(points[i]);
+            let hasPositive = false;
+            let hasNegative = false;
+            for (const point of points) {
+              const distance = normal.dot(point) - offset;
+              if (distance > epsilon) hasPositive = true;
+              if (distance < -epsilon) hasNegative = true;
+              if (hasPositive && hasNegative) break;
+            }
+            if (hasPositive && hasNegative) continue;
+
+            const coplanar = [];
+            for (let n = 0; n < points.length; n += 1) {
+              if (Math.abs(normal.dot(points[n]) - offset) <= epsilon) coplanar.push(n);
+            }
+            if (coplanar.length < 3) continue;
+
+            const key = coplanar.slice().sort((x, y) => x - y).join(",");
+            if (seen.has(key)) continue;
+            seen.add(key);
+
+            const faceCenter = new THREE.Vector3();
+            coplanar.forEach(index => faceCenter.add(points[index]));
+            faceCenter.divideScalar(coplanar.length);
+            if (normal.dot(new THREE.Vector3().subVectors(faceCenter, center)) < 0) {
+              normal.multiplyScalar(-1);
+            }
+
+            const ordered = orderFaceVertices(coplanar, points, faceCenter, normal);
+            faces.push({ indices: ordered, normal, center: faceCenter });
+          }
+        }
+      }
+
+      return faces.sort((left, right) => left.indices.length - right.indices.length);
+    }
+
+    function orderFaceVertices(indices, points, faceCenter, normal) {
+      const u = new THREE.Vector3().subVectors(points[indices[0]], faceCenter).normalize();
+      const v = new THREE.Vector3().crossVectors(normal, u).normalize();
+      const ordered = indices.slice().sort((left, right) => {
+        const leftVector = new THREE.Vector3().subVectors(points[left], faceCenter);
+        const rightVector = new THREE.Vector3().subVectors(points[right], faceCenter);
+        const leftAngle = Math.atan2(leftVector.dot(v), leftVector.dot(u));
+        const rightAngle = Math.atan2(rightVector.dot(v), rightVector.dot(u));
+        return leftAngle - rightAngle;
+      });
+
+      const triNormal = new THREE.Vector3()
+        .crossVectors(
+          new THREE.Vector3().subVectors(points[ordered[1]], points[ordered[0]]),
+          new THREE.Vector3().subVectors(points[ordered[2]], points[ordered[0]])
+        )
+        .normalize();
+
+      if (triNormal.dot(normal) < 0) ordered.reverse();
+      return ordered;
+    }
+
+    function createFaceMesh({ points, faces }) {
+      const positions = [];
+      const normals = [];
+      const colors = [];
+      const triangleToFace = [];
+      const squareColor = new THREE.Color(0x54aaa4);
+      const hexColors = [
+        new THREE.Color(0xe76f5f),
+        new THREE.Color(0xf0b44f),
+        new THREE.Color(0x708bd4),
+        new THREE.Color(0x8c76c8)
+      ];
+      let hexIndex = 0;
+
+      for (let faceIndex = 0; faceIndex < faces.length; faceIndex += 1) {
+        const face = faces[faceIndex];
+        const color = face.indices.length === 4
+          ? squareColor
+          : hexColors[hexIndex++ % hexColors.length];
+
+        for (let i = 1; i < face.indices.length - 1; i += 1) {
+          triangleToFace.push(faceIndex);
+          const triangle = [face.indices[0], face.indices[i], face.indices[i + 1]];
+          for (const index of triangle) {
+            const point = points[index];
+            positions.push(point.x, point.y, point.z);
+            normals.push(face.normal.x, face.normal.y, face.normal.z);
+            colors.push(color.r, color.g, color.b);
+          }
+        }
+      }
+
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+      geometry.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
+      geometry.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+
+      const mesh = new THREE.Mesh(
+        geometry,
+        new THREE.MeshStandardMaterial({
+          vertexColors: true,
+          flatShading: true,
+          roughness: 0.58,
+          metalness: 0.04,
+          transparent: true,
+          opacity: 0.88,
+          side: THREE.DoubleSide
+        })
+      );
+      mesh.userData.triangleToFace = triangleToFace;
+      return mesh;
+    }
+
+    function createEdgeGroup({ points, edges }) {
+      const group = new THREE.Group();
+      const material = new THREE.MeshStandardMaterial({
+        color: 0x1d2228,
+        roughness: 0.48,
+        metalness: 0.12
+      });
+
+      for (const edge of edges) {
+        const endpoints = directedEdgeEndpoints(edge);
+        const rawStart = points[endpoints.source];
+        const rawEnd = points[endpoints.target];
+        const unit = new THREE.Vector3().subVectors(rawEnd, rawStart).normalize();
+        const start = rawStart.clone().add(unit.clone().multiplyScalar(0.11));
+        const end = rawEnd.clone().add(unit.clone().multiplyScalar(-0.11));
+        const parts = straightArrowParts(
+          start,
+          end,
+          material,
+          { bodyRadius: 0.018, headRadius: 0.058, headLength: 0.15 }
+        );
+        edge.source = endpoints.source;
+        edge.target = endpoints.target;
+
+        for (const part of parts) {
+          part.userData.edge = edge;
+          part.userData.edgeKey = edge.key;
+          part.userData.defaultMaterial = material;
+          part.castShadow = true;
+          group.add(part);
+        }
+      }
+
+      return group;
+    }
+
+    function directedEdgeEndpoints(edge) {
+      const startInversions = inversionCount(data.perms[edge.start]);
+      const endInversions = inversionCount(data.perms[edge.end]);
+      return startInversions <= endInversions
+        ? { source: edge.start, target: edge.end }
+        : { source: edge.end, target: edge.start };
+    }
+
+    function createFaceHighlight() {
+      const geometry = new THREE.BufferGeometry();
+      const material = new THREE.MeshBasicMaterial({
+        color: 0xffd35f,
+        transparent: true,
+        opacity: 0.42,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+        polygonOffset: true,
+        polygonOffsetFactor: -2,
+        polygonOffsetUnits: -2
+      });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.visible = false;
+      return mesh;
+    }
+
+    function createCoherenceArrowGroup(data, boundary) {
+      const group = new THREE.Group();
+      const outsideRadius = Math.max(...data.points.map(point => point.length())) * 1.50;
+      addBoundaryArrows(group, data, boundary.first, 0x2f6fed, outsideRadius);
+      addBoundaryArrows(group, data, boundary.second, 0xd33c33, outsideRadius * 1.06);
+      return group;
+    }
+
+    function addBoundaryArrows(group, data, steps, color, radius) {
+      const material = new THREE.MeshBasicMaterial({
+        color,
+        transparent: true,
+        opacity: 0.95,
+        depthTest: true,
+        depthWrite: false
+      });
+
+      for (let i = 0; i < steps.length - 1; i += 1) {
+        const fromFace = data.faces[steps[i].faceIndex];
+        const toFace = data.faces[steps[i + 1].faceIndex];
+        const arrow = curvedFaceArrowBetween(fromFace, toFace, material, radius, data.faces);
+        arrow.userData.boundaryStep = steps[i];
+        group.add(arrow);
+      }
+    }
+
+    function faceArrowAnchor(face) {
+      return face.center.clone().add(face.normal.clone().multiplyScalar(0.045));
+    }
+
+    function straightArrowParts(start, end, material, options) {
+      const direction = new THREE.Vector3().subVectors(end, start);
+      const length = direction.length();
+      if (length <= 0.04) return [];
+
+      const unit = direction.clone().normalize();
+      const headLength = Math.min(options.headLength, length * 0.34);
+      const bodyLength = Math.max(0.01, length - headLength);
+
+      const body = new THREE.Mesh(
+        new THREE.CylinderGeometry(options.bodyRadius, options.bodyRadius, bodyLength, 14, 1),
+        material
+      );
+      body.position.copy(start).add(unit.clone().multiplyScalar(bodyLength / 2));
+      body.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), unit);
+      body.userData.edgePart = "body";
+
+      const head = new THREE.Mesh(
+        new THREE.ConeGeometry(options.headRadius, headLength, 20, 1),
+        material
+      );
+      head.position.copy(start).add(unit.clone().multiplyScalar(bodyLength + headLength / 2));
+      head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), unit);
+      head.userData.edgePart = "head";
+
+      return [body, head];
+    }
+
+    function curvedFaceArrowBetween(startFace, endFace, material, radius, hullFaces) {
+      const startAnchor = faceArrowAnchor(startFace);
+      const endAnchor = faceArrowAnchor(endFace);
+      const curve = outsideBulgeCurve(
+        startAnchor,
+        endAnchor,
+        startFace.normal,
+        endFace.normal,
+        hullFaces,
+        radius
+      );
+      return curvedArrowFromCurve(curve, material);
+    }
+
+    function curvedArrowFromCurve(curve, material) {
+      const group = new THREE.Group();
+      const tube = new THREE.Mesh(
+        new THREE.TubeGeometry(curve, 64, 0.02, 10, false),
+        material
+      );
+      tube.renderOrder = 10;
+      tube.castShadow = false;
+      tube.userData.curve = curve;
+      group.add(tube);
+      group.userData.curve = curve;
+
+      const unit = curve.getTangent(1).normalize();
+      const endPoint = curve.getPoint(1);
+      const headLength = 0.18;
+      const head = new THREE.Mesh(
+        new THREE.ConeGeometry(0.075, headLength, 20, 1),
+        material
+      );
+      head.position.copy(endPoint).add(unit.clone().multiplyScalar(-headLength / 2));
+      head.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), unit);
+      head.renderOrder = 10;
+      group.add(head);
+
+      return group;
+    }
+
+    function outsideBulgeCurve(startAnchor, endAnchor, startNormal, endNormal, hullFaces, radius) {
+      const middle = new THREE.Vector3().addVectors(startAnchor, endAnchor).multiplyScalar(0.5);
+      const directions = outsideDirectionCandidates(startAnchor, endAnchor, startNormal, endNormal);
+      let best = null;
+
+      for (const direction of directions) {
+        for (const heightFactor of [0.45, 0.65, 0.9, 1.2, 1.6, 2.15, 2.8, 3.6]) {
+          const control = middle.clone().add(direction.clone().multiplyScalar(radius * heightFactor));
+          const curve = new THREE.QuadraticBezierCurve3(startAnchor, control, endAnchor);
+          const clearance = curveOutsideClearance(curve, hullFaces);
+
+          if (!best || clearance > best.clearance) {
+            best = { curve, clearance };
+          }
+
+          if (clearance > 0.018) return curve;
+        }
+      }
+
+      return best.curve;
+    }
+
+    function outsideDirectionCandidates(startAnchor, endAnchor, startNormal, endNormal) {
+      const candidates = [];
+      const chord = new THREE.Vector3().subVectors(endAnchor, startAnchor).normalize();
+      const normalSum = new THREE.Vector3().addVectors(startNormal, endNormal);
+      const radialSum = new THREE.Vector3().addVectors(startAnchor, endAnchor);
+
+      addCandidate(candidates, normalSum);
+      addCandidate(candidates, normalSum.clone().sub(chord.clone().multiplyScalar(normalSum.dot(chord))));
+      addCandidate(candidates, radialSum);
+      addCandidate(candidates, startNormal);
+      addCandidate(candidates, endNormal);
+      addCandidate(candidates, startNormal.clone().multiplyScalar(0.72).add(endNormal.clone().multiplyScalar(0.28)));
+      addCandidate(candidates, startNormal.clone().multiplyScalar(0.28).add(endNormal.clone().multiplyScalar(0.72)));
+      addCandidate(candidates, new THREE.Vector3().crossVectors(chord, normalSum).cross(chord));
+      addCandidate(candidates, new THREE.Vector3().crossVectors(chord, normalSum).cross(chord).multiplyScalar(-1));
+
+      return candidates;
+    }
+
+    function addCandidate(candidates, direction) {
+      if (direction.lengthSq() < 1e-6) return;
+      direction.normalize();
+      if (candidates.some(candidate => Math.abs(candidate.dot(direction)) > 0.998)) return;
+      candidates.push(direction);
+    }
+
+    function curveOutsideClearance(curve, hullFaces) {
+      let minClearance = Infinity;
+      for (let i = 1; i < 100; i += 1) {
+        const point = curve.getPoint(i / 100);
+        minClearance = Math.min(minClearance, outsideClearance(point, hullFaces));
+      }
+      return minClearance;
+    }
+
+    function outsideClearance(point, hullFaces) {
+      return Math.max(...hullFaces.map(face => face.normal.dot(point.clone().sub(face.center))));
+    }
+
+    function cylinderBetween(start, end, radius, material) {
+      const direction = new THREE.Vector3().subVectors(end, start);
+      const length = direction.length();
+      const geometry = new THREE.CylinderGeometry(radius, radius, length, 12, 1);
+      const cylinder = new THREE.Mesh(geometry, material);
+      cylinder.position.copy(new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5));
+      cylinder.quaternion.setFromUnitVectors(
+        new THREE.Vector3(0, 1, 0),
+        direction.normalize()
+      );
+      cylinder.castShadow = true;
+      return cylinder;
+    }
+
+    function createVertexGroup({ points, perms }) {
+      const group = new THREE.Group();
+      const geometry = new THREE.SphereGeometry(0.088, 24, 16);
+      const material = new THREE.MeshStandardMaterial({
+        color: 0x11161a,
+        roughness: 0.34,
+        metalness: 0.18
+      });
+
+      for (let index = 0; index < points.length; index += 1) {
+        const sphere = new THREE.Mesh(geometry, material);
+        sphere.position.copy(points[index]);
+        sphere.userData.index = index;
+        sphere.userData.permutation = perms[index].join(" ");
+        sphere.castShadow = true;
+        group.add(sphere);
+      }
+
+      return group;
+    }
+
+    function handlePointerDown(event) {
+      if (event.pointerType !== "touch") return;
+      touchInteraction.touches.set(event.pointerId, {
+        x: event.clientX,
+        y: event.clientY
+      });
+      touchInteraction.hoverSuspended = true;
+      view.pointerInside = false;
+
+      if (touchInteraction.touches.size === 1) {
+        touchInteraction.tap = {
+          id: event.pointerId,
+          startX: event.clientX,
+          startY: event.clientY,
+          startedAt: performance.now(),
+          moved: false
+        };
+      } else {
+        touchInteraction.tap = null;
+      }
+
+      touchInteraction.pinchDistance = touchDistance();
+      touchInteraction.twistAngle = touchAngle();
+      touchInteraction.twistDelta = 0;
+    }
+
+    function handlePointerMove(event) {
+      if (event.pointerType === "touch") {
+        const touch = touchInteraction.touches.get(event.pointerId);
+        if (touch) {
+          touch.x = event.clientX;
+          touch.y = event.clientY;
+        }
+
+        if (touchInteraction.tap?.id === event.pointerId) {
+          const dx = event.clientX - touchInteraction.tap.startX;
+          const dy = event.clientY - touchInteraction.tap.startY;
+          if (Math.hypot(dx, dy) > TAP_MOVE_LIMIT) {
+            touchInteraction.tap.moved = true;
+          }
+        }
+
+        updatePinchScale();
+        updateTouchTwist();
+        view.pointerInside = false;
+        return;
+      }
+
+      setPointerFromClient(event.clientX, event.clientY);
+      view.pointerInside = true;
+    }
+
+    function handlePointerUp(event) {
+      if (event.pointerType !== "touch") return;
+
+      const tap = touchInteraction.tap;
+      const isTap = tap &&
+        tap.id === event.pointerId &&
+        !tap.moved &&
+        touchInteraction.touches.size === 1 &&
+        performance.now() - tap.startedAt <= TAP_TIME_LIMIT;
+
+      touchInteraction.touches.delete(event.pointerId);
+      if (touchInteraction.touches.size === 0) {
+        touchInteraction.hoverSuspended = false;
+        touchInteraction.tap = null;
+        touchInteraction.pinchDistance = 0;
+        touchInteraction.twistAngle = null;
+        touchInteraction.twistDelta = 0;
+        view.pointerInside = false;
+      } else {
+        if (tap?.id === event.pointerId) {
+          touchInteraction.tap = null;
+        }
+        touchInteraction.pinchDistance = touchDistance();
+        touchInteraction.twistAngle = touchAngle();
+        touchInteraction.twistDelta = 0;
+      }
+
+      if (isTap) {
+        selectAtClientPoint(event.clientX, event.clientY);
+      }
+    }
+
+    function handlePointerCancel(event) {
+      if (event.pointerType !== "touch") return;
+      touchInteraction.touches.delete(event.pointerId);
+      if (touchInteraction.touches.size === 0) {
+        touchInteraction.hoverSuspended = false;
+        touchInteraction.tap = null;
+        touchInteraction.pinchDistance = 0;
+        touchInteraction.twistAngle = null;
+        touchInteraction.twistDelta = 0;
+        view.pointerInside = false;
+      } else {
+        touchInteraction.pinchDistance = touchDistance();
+        touchInteraction.twistAngle = touchAngle();
+        touchInteraction.twistDelta = 0;
+      }
+    }
+
+    function handlePointerLeave(event) {
+      if (event.pointerType === "touch") return;
+      view.pointerInside = false;
+      clearHover();
+    }
+
+    function setPointerFromClient(clientX, clientY) {
+      const rect = renderer.domElement.getBoundingClientRect();
+      view.pointer.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+      view.pointer.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+    }
+
+    function selectAtClientPoint(clientX, clientY) {
+      setPointerFromClient(clientX, clientY);
+      view.pointerInside = true;
+      updateHover();
+      view.pointerInside = false;
+    }
+
+    function handleWheelScale(event) {
+      event.preventDefault();
+      stopAutoRotate();
+      const factor = Math.exp(-event.deltaY * 0.0012 * TOUCH_SCALE_SPEED);
+      setModelScale(root.scale.x * factor);
+    }
+
+    function updatePinchScale() {
+      if (touchInteraction.touches.size < 2) return;
+      const distance = touchDistance();
+      if (!distance) return;
+      if (!touchInteraction.pinchDistance) {
+        touchInteraction.pinchDistance = distance;
+        return;
+      }
+
+      const factor = Math.pow(distance / touchInteraction.pinchDistance, TOUCH_SCALE_SPEED);
+      setModelScale(root.scale.x * factor);
+      touchInteraction.pinchDistance = distance;
+    }
+
+    function updateTouchTwist() {
+      if (touchInteraction.touches.size < 2) return;
+      const angle = touchAngle();
+      if (!Number.isFinite(angle)) return;
+      if (touchInteraction.twistAngle === null) {
+        touchInteraction.twistAngle = angle;
+        return;
+      }
+
+      const delta = normalizeAngle(angle - touchInteraction.twistAngle);
+      touchInteraction.twistDelta = delta;
+      touchInteraction.twistAngle = angle;
+      if (Math.abs(delta) < 0.004) return;
+
+      stopAutoRotate();
+      const axis = camera.getWorldDirection(new THREE.Vector3()).normalize();
+      const quaternion = new THREE.Quaternion().setFromAxisAngle(axis, -delta * TOUCH_TWIST_SPEED);
+      root.quaternion.premultiply(quaternion);
+    }
+
+    function touchDistance() {
+      if (touchInteraction.touches.size < 2) return 0;
+      const [first, second] = [...touchInteraction.touches.values()];
+      return Math.hypot(first.x - second.x, first.y - second.y);
+    }
+
+    function touchAngle() {
+      if (touchInteraction.touches.size < 2) return 0;
+      const [first, second] = [...touchInteraction.touches.values()];
+      return Math.atan2(second.y - first.y, second.x - first.x);
+    }
+
+    function normalizeAngle(angle) {
+      return Math.atan2(Math.sin(angle), Math.cos(angle));
+    }
+
+    function setModelScale(scale, syncControl = true) {
+      const min = Number(scaleControl.min) / 100;
+      const max = Number(scaleControl.max) / 100;
+      const next = THREE.MathUtils.clamp(scale, min, max);
+      root.scale.setScalar(next);
+      if (syncControl) {
+        scaleControl.value = String(Math.round(next * 100));
+      }
+    }
+
+    function stopAutoRotate() {
+      view.autoRotate = false;
+      toggles.auto.checked = false;
+    }
+
+    function updateHover() {
+      if (touchInteraction.hoverSuspended || !view.pointerInside) return;
+      raycaster.setFromCamera(view.pointer, camera);
+      const selection = pickSelection();
+      if (!selection) {
+        clearHover();
+        return;
+      }
+
+      setActiveSelection(selection);
+    }
+
+    function pickSelection() {
+      if (vertexGroup.visible) {
+        const vertexHits = raycaster.intersectObjects(vertexGroup.children, false);
+        if (vertexHits.length > 0) {
+          return { kind: "vertex", object: vertexHits[0].object };
+        }
+      }
+
+      const edgeHit = edgeGroup.visible
+        ? raycaster.intersectObjects(edgeGroup.children, false)[0]
+        : null;
+      const faceHit = faceMesh.visible
+        ? raycaster.intersectObject(faceMesh, false)[0]
+        : null;
+
+      if (edgeHit && (!faceHit || edgeHit.distance <= faceHit.distance + 0.03)) {
+        return { kind: "edge", object: edgeHit.object };
+      }
+
+      if (faceHit) {
+        const faceIndex = faceMesh.userData.triangleToFace[faceHit.faceIndex];
+        return { kind: "face", faceIndex };
+      }
+
+      return null;
+    }
+
+    function setActiveSelection(selection) {
+      const key = selection.kind === "face"
+        ? `${selection.kind}:${selection.faceIndex}`
+        : `${selection.kind}:${selection.object.userData.edgeKey ?? selection.object.id}`;
+      if (view.active?.key === key) return;
+
+      clearActiveVisual();
+      view.active = { ...selection, key };
+
+      if (selection.kind === "vertex") {
+        selection.object.scale.setScalar(1.55);
+        const index = selection.object.userData.index;
+        const perm = data.perms[index];
+        hoverBadge.textContent = `vertex (${perm.join(" ")})`;
+        setVertexFormula(index);
+      } else if (selection.kind === "edge") {
+        const edge = selection.object.userData.edge;
+        view.active.edge = edge;
+        setEdgeHighlight(edge, true);
+        hoverBadge.textContent = `edge s${edge.swapIndex}`;
+        setEdgeFormula(edge);
+      } else {
+        const face = data.faces[selection.faceIndex];
+        updateFaceHighlight(face);
+        setFacePathHighlight(face);
+        hoverBadge.textContent = `${face.indices.length === 4 ? "square" : "hexagon"} face`;
+        setFaceFormula(face);
+      }
+
+      hoverBadge.hidden = false;
+    }
+
+    function clearHover() {
+      clearActiveVisual();
+      clearFacePathHighlight();
+      faceHighlight.visible = false;
+      view.active = null;
+      hoverBadge.hidden = true;
+      setDefaultFormula();
+    }
+
+    function clearActiveVisual() {
+      if (!view.active) return;
+      if (view.active.kind === "vertex") view.active.object.scale.setScalar(1);
+      if (view.active.kind === "edge") setEdgeHighlight(view.active.edge, false);
+      if (view.active.kind === "face") clearFacePathHighlight();
+      faceHighlight.visible = false;
+    }
+
+    function setEdgeHighlight(edge, active) {
+      for (const part of edgeGroup.children) {
+        if (part.userData.edgeKey !== edge.key) continue;
+        const radial = active ? (part.userData.edgePart === "head" ? 1.42 : 2.25) : 1;
+        const axial = active ? (part.userData.edgePart === "head" ? 1.08 : 1) : 1;
+        part.scale.set(radial, axial, radial);
+      }
+    }
+
+    function setFacePathHighlight(face) {
+      const coherence = faceCoherence(face);
+      coherence.pathEdges.forEach((pathEdges, pathIndex) => {
+        const material = facePathEdgeMaterials[pathIndex];
+        for (const edge of pathEdges) {
+          setEdgePathHighlight(edgeKeyForEndpoints(edge.source, edge.target), material, pathIndex);
+        }
+      });
+    }
+
+    function setEdgePathHighlight(edgeKey, material, pathIndex) {
+      for (const part of edgeGroup.children) {
+        if (part.userData.edgeKey !== edgeKey) continue;
+        part.material = material;
+        part.userData.facePathActive = true;
+        part.userData.facePathIndex = pathIndex;
+        const radial = part.userData.edgePart === "head"
+          ? FACE_PATH_EDGE_SCALE.head
+          : FACE_PATH_EDGE_SCALE.body;
+        part.scale.set(radial, 1, radial);
+      }
+    }
+
+    function clearFacePathHighlight() {
+      for (const part of edgeGroup.children) {
+        if (!part.userData.facePathActive) continue;
+        part.material = part.userData.defaultMaterial;
+        part.scale.set(1, 1, 1);
+        part.userData.facePathActive = false;
+        part.userData.facePathIndex = undefined;
+      }
+    }
+
+    function edgeKeyForEndpoints(left, right) {
+      return `${Math.min(left, right)}:${Math.max(left, right)}`;
+    }
+
+    function updateFaceHighlight(face) {
+      const positions = [];
+      const offset = face.normal.clone().multiplyScalar(0.012);
+      for (let i = 1; i < face.indices.length - 1; i += 1) {
+        const triangle = [face.indices[0], face.indices[i], face.indices[i + 1]];
+        for (const index of triangle) {
+          const point = data.points[index].clone().add(offset);
+          positions.push(point.x, point.y, point.z);
+        }
+      }
+      faceHighlight.geometry.dispose();
+      faceHighlight.geometry = new THREE.BufferGeometry();
+      faceHighlight.geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+      faceHighlight.visible = true;
+    }
+
+    function setDefaultFormula() {
+      setFormula(
+        "Delta-delta permutahedron",
+        "\\delta\\text{-}\\delta\\text{-}\\mathrm{perm}_4(t,s,r,q,\\alpha,\\zeta,\\gamma,\\beta)",
+        [
+          { label: "vertex", tex: "\\delta_t^\\alpha\\circ\\delta_{s+1}^\\zeta\\circ\\delta_{r+2}^\\gamma\\circ\\delta_{q+3}^\\beta" },
+          { label: "edge", tex: "\\delta\\text{-}\\delta\\text{ rewrite swapping adjacent restrictions}" },
+          { label: "face", tex: "\\delta\\text{-}\\delta\\text{-}\\mathrm{hex}\\;\\text{or}\\;\\delta\\text{-}\\delta\\text{-}\\mathrm{sq}" },
+          { label: "blue", labelClass: "blue", tex: wordPathFormulaTex(FIRST_BOUNDARY_WORDS) },
+          { label: "red", labelClass: "red", tex: wordPathFormulaTex(SECOND_BOUNDARY_WORDS) }
+      ]);
+    }
+
+    function setVertexFormula(index) {
+      const perm = data.perms[index];
+      const point = data.points[index];
+      setFormula("Vertex", termTexForPermutation(perm), [
+        { label: "order", tex: orderTex(perm) },
+        { label: "word", text: perm.join("") },
+        { label: "pi-coordinate", text: `(${point.x.toFixed(3)}, ${point.y.toFixed(3)}, ${point.z.toFixed(3)})` }
+      ]);
+    }
+
+    function setEdgeFormula(edge) {
+      const formula = edgeCoherence(edge.start, edge.end);
+      setFormula(
+        "Edge",
+        `${formula.labelTex}:\\quad ${formula.sourceTermTex}\\;=\\;${formula.targetTermTex}`,
+        [
+          { label: "swaps", tex: `${deltaSymbolTex(formula.low)}\\leftrightarrow ${deltaSymbolTex(formula.high)}` },
+          { label: "source order", tex: orderTex(formula.sourcePerm) },
+          { label: "target order", tex: orderTex(formula.targetPerm) }
+        ]
+      );
+    }
+
+    function setFaceFormula(face) {
+      const coherence = faceCoherence(face);
+      const subset = face.subset;
+      const shape = face.indices.length === 4 ? "square" : "hexagon";
+      const rows = [
+        { label: "source", tex: termTexForPermutation(data.perms[coherence.source]) },
+        { label: "target", tex: termTexForPermutation(data.perms[coherence.target]) },
+        { label: "facet", tex: `F_{\\{${subset.join(",")}\\}}\\;(${shape})` }
+      ];
+      rows.push(...faceBoundaryRows(face.id));
+      setFormula(
+        "Face",
+        `\\begin{aligned}${coherence.nameTex}:\\quad&${pathFormulaTex(coherence.paths[0])}\\\\&=${pathFormulaTex(coherence.paths[1])}\\end{aligned}`,
+        rows
+      );
+      setFaceDiagram(face, coherence);
+    }
+
+    function setFormula(kind, mainTex, rows) {
+      formulaKind.textContent = kind;
+      renderTex(formulaMain, mainTex, true);
+      formulaRows.replaceChildren(...rows.map(createFormulaRow));
+      formulaDiagram.hidden = true;
+      formulaDiagram.replaceChildren();
+    }
+
+    function createFormulaRow(row) {
+      const element = document.createElement("div");
+      element.className = "formula-row";
+      if (typeof row === "string") {
+        element.textContent = row;
+        return element;
+      }
+
+      if (row.label) {
+        const label = document.createElement("span");
+        label.className = `formula-row-label${row.labelClass ? ` ${row.labelClass}` : ""}`;
+        label.textContent = `${row.label}:`;
+        element.append(label);
+      }
+
+      if (row.tex) {
+        const math = document.createElement("span");
+        renderTex(math, row.tex, false);
+        element.append(math);
+      } else if (row.text) {
+        element.append(document.createTextNode(row.text));
+      }
+
+      return element;
+    }
+
+    function renderTex(target, tex, displayMode) {
+      target.replaceChildren();
+      try {
+        katex.render(tex, target, {
+          displayMode,
+          throwOnError: false,
+          strict: "ignore"
+        });
+      } catch {
+        target.textContent = tex;
+      }
+    }
+
+    function deltaSymbol(value) {
+      return {
+        1: "α",
+        2: "ζ",
+        3: "γ",
+        4: "β"
+      }[value];
+    }
+
+    function deltaSymbolTex(value) {
+      return {
+        1: "\\alpha",
+        2: "\\zeta",
+        3: "\\gamma",
+        4: "\\beta"
+      }[value];
+    }
+
+    function deltaBase(value) {
+      return {
+        1: "t",
+        2: "s",
+        3: "r",
+        4: "q"
+      }[value];
+    }
+
+    function deltaIndex(value, perm, adjustment = 0) {
+      const position = perm.indexOf(value);
+      const lowerToLeft = perm.slice(0, position).filter(other => other < value).length;
+      const shift = lowerToLeft + adjustment;
+      const base = deltaBase(value);
+      if (shift === 0) return base;
+      if (shift > 0) return `${base}+${shift}`;
+      return `${base}${shift}`;
+    }
+
+    function deltaTermTex(value, perm) {
+      return `\\delta_{${deltaIndex(value, perm)}}^{${deltaSymbolTex(value)}}`;
+    }
+
+    function termTexForPermutation(perm) {
+      return perm.map(value => deltaTermTex(value, perm)).join("\\circ ");
+    }
+
+    function orderTex(perm) {
+      return perm.map(deltaSymbolTex).join("\\,");
+    }
+
+    function inversionCount(perm) {
+      let count = 0;
+      for (let i = 0; i < perm.length; i += 1) {
+        for (let j = i + 1; j < perm.length; j += 1) {
+          if (perm[i] > perm[j]) count += 1;
+        }
+      }
+      return count;
+    }
+
+    function edgeCoherence(startIndex, endIndex) {
+      const a = data.perms[startIndex];
+      const b = data.perms[endIndex];
+      const sourceIndex = inversionCount(a) < inversionCount(b) ? startIndex : endIndex;
+      const targetIndex = sourceIndex === startIndex ? endIndex : startIndex;
+      const sourcePerm = data.perms[sourceIndex];
+      const targetPerm = data.perms[targetIndex];
+      const swapPosition = firstDifference(sourcePerm, targetPerm);
+      const low = sourcePerm[swapPosition];
+      const high = sourcePerm[swapPosition + 1];
+      return {
+        source: sourceIndex,
+        target: targetIndex,
+        swapIndex: swapPosition + 1,
+        sourcePerm,
+        targetPerm,
+        low,
+        high,
+        label: `δ-δ ${deltaIndex(low, sourcePerm)} ${deltaIndex(high, sourcePerm, -1)} ${deltaSymbol(low)} ${deltaSymbol(high)}`,
+        labelTex: hcDdTex(
+          deltaIndex(low, sourcePerm),
+          deltaIndex(high, sourcePerm, -1),
+          deltaSymbolTex(low),
+          deltaSymbolTex(high)
+        ),
+        sourceTermTex: termTexForPermutation(sourcePerm),
+        targetTermTex: termTexForPermutation(targetPerm)
+      };
+    }
+
+    function hcDdTex(r, q, gamma, beta) {
+      return `\\mathsf{\\delta\\text{-}\\delta}\\!\\left(${r},${q},${gamma},${beta}\\right)`;
+    }
+
+    function firstDifference(left, right) {
+      for (let i = 0; i < left.length; i += 1) {
+        if (left[i] !== right[i]) return i;
+      }
+      return -1;
+    }
+
+    function faceCoherence(face) {
+      const cycle = face.indices;
+      const inversions = new Map(cycle.map(index => [index, inversionCount(data.perms[index])]));
+      const source = cycle.reduce((best, index) =>
+        inversions.get(index) < inversions.get(best) ? index : best
+      );
+      const target = cycle.reduce((best, index) =>
+        inversions.get(index) > inversions.get(best) ? index : best
+      );
+      const clockwise = increasingArc(cycle, source, target, 1, inversions);
+      const counterClockwise = increasingArc(cycle, source, target, -1, inversions);
+      const pathEdges = [clockwise, counterClockwise]
+        .map(path => path.map(([start, end]) => edgeCoherence(start, end)))
+        .sort(comparePathEdges);
+      return {
+        name: face.indices.length === 4 ? "δ-δ-sq" : "δ-δ-hex",
+        nameTex: face.indices.length === 4
+          ? "\\delta\\text{-}\\delta\\text{-}\\mathrm{sq}"
+          : "\\delta\\text{-}\\delta\\text{-}\\mathrm{hex}",
+        source,
+        target,
+        pathEdges,
+        paths: pathEdges.map(path => path.map(edge => edge.labelTex))
+      };
+    }
+
+    function comparePathEdges(left, right) {
+      return pathWord(left).localeCompare(pathWord(right));
+    }
+
+    function pathWord(pathEdges) {
+      return pathEdges.map(edge => edge.swapIndex).join("");
+    }
+
+    function increasingArc(cycle, source, target, step, inversions) {
+      const arc = [];
+      let cursor = cycle.indexOf(source);
+      while (cycle[cursor] !== target) {
+        const next = (cursor + step + cycle.length) % cycle.length;
+        const from = cycle[cursor];
+        const to = cycle[next];
+        if (inversions.get(to) !== inversions.get(from) + 1) return [];
+        arc.push([from, to]);
+        cursor = next;
+      }
+      return arc;
+    }
+
+    function pathFormulaTex(labels) {
+      if (labels.length === 0) return "\\text{unavailable}";
+      return labels.join("\\;\\cdot\\;");
+    }
+
+    function wordPathFormulaTex(words) {
+      return words.map(ddWordTex).join("\\;\\to\\;");
+    }
+
+    function ddWordTex(word) {
+      return `\\delta\\delta[${word}]`;
+    }
+
+    function faceBoundaryRows(faceIndex) {
+      const rows = [];
+      for (const step of boundary.first.filter(item => item.faceIndex === faceIndex)) {
+        rows.push({
+          label: `blue step ${step.step}`,
+          labelClass: "blue",
+          tex: `${ddWordTex(step.fromWord)}\\;\\to\\;${ddWordTex(step.toWord)}\\quad(${step.labelTex})`
+        });
+      }
+      for (const step of boundary.second.filter(item => item.faceIndex === faceIndex)) {
+        rows.push({
+          label: `red step ${step.step}`,
+          labelClass: "red",
+          tex: `${ddWordTex(step.fromWord)}\\;\\to\\;${ddWordTex(step.toWord)}\\quad(${step.labelTex})`
+        });
+      }
+      return rows;
+    }
+
+    function setFaceDiagram(face, coherence) {
+      const isSquare = face.indices.length === 4;
+      const top = pathVertexSequence(coherence.source, coherence.pathEdges[0]);
+      const bottom = pathVertexSequence(coherence.source, coherence.pathEdges[1]);
+      if ((isSquare && (top.length !== 3 || bottom.length !== 3)) ||
+          (!isSquare && (top.length !== 4 || bottom.length !== 4))) {
+        return;
+      }
+
+      const diagram = document.createElement("div");
+      diagram.className = `coherence-diagram ${isSquare ? "square" : "hexagon"}`;
+      const spec = isSquare
+        ? squareDiagramSpec(top, bottom, coherence.pathEdges)
+        : hexDiagramSpec(top, bottom, coherence.pathEdges);
+
+      diagram.append(createDiagramSvg(spec.arrows));
+      for (const node of spec.nodes) {
+        diagram.append(createDiagramNode(node));
+      }
+      for (const label of spec.labels) {
+        diagram.append(createDiagramLabel(label));
+      }
+
+      const downarrow = document.createElement("div");
+      downarrow.className = "diagram-downarrow";
+      renderTex(downarrow, "\\Downarrow", false);
+      diagram.append(downarrow);
+
+      formulaDiagram.replaceChildren(diagram);
+      formulaDiagram.hidden = false;
+    }
+
+    function pathVertexSequence(source, edges) {
+      const sequence = [source];
+      for (const edge of edges) sequence.push(edge.target);
+      return sequence;
+    }
+
+    function squareDiagramSpec(top, bottom, pathEdges) {
+      return {
+        nodes: [
+          { key: "TL", index: top[0], x: 20, y: 32 },
+          { key: "TR", index: top[1], x: 80, y: 32 },
+          { key: "BL", index: bottom[1], x: 20, y: 68 },
+          { key: "BR", index: top[2], x: 80, y: 68 }
+        ],
+        arrows: [
+          { from: [32, 32], to: [68, 32], path: 0 },
+          { from: [80, 40], to: [80, 60], path: 0 },
+          { from: [20, 40], to: [20, 60], path: 1 },
+          { from: [32, 68], to: [68, 68], path: 1 }
+        ],
+        labels: [
+          { tex: pathEdges[0][0].labelTex, x: 50, y: 24 },
+          { tex: pathEdges[0][1].labelTex, x: 90, y: 50 },
+          { tex: pathEdges[1][0].labelTex, x: 10, y: 50 },
+          { tex: pathEdges[1][1].labelTex, x: 50, y: 76 }
+        ]
+      };
+    }
+
+    function hexDiagramSpec(top, bottom, pathEdges) {
+      return {
+        nodes: [
+          { key: "L", index: top[0], x: 12, y: 50 },
+          { key: "UL", index: top[1], x: 34, y: 28 },
+          { key: "UR", index: top[2], x: 66, y: 28 },
+          { key: "R", index: top[3], x: 88, y: 50 },
+          { key: "LL", index: bottom[1], x: 34, y: 72 },
+          { key: "LR", index: bottom[2], x: 66, y: 72 }
+        ],
+        arrows: [
+          { from: [18, 45], to: [28, 35], path: 0 },
+          { from: [43, 28], to: [57, 28], path: 0 },
+          { from: [72, 35], to: [82, 45], path: 0 },
+          { from: [18, 55], to: [28, 65], path: 1 },
+          { from: [43, 72], to: [57, 72], path: 1 },
+          { from: [72, 65], to: [82, 55], path: 1 }
+        ],
+        labels: [
+          { tex: pathEdges[0][0].labelTex, x: 13, y: 34 },
+          { tex: pathEdges[0][1].labelTex, x: 50, y: 18 },
+          { tex: pathEdges[0][2].labelTex, x: 87, y: 34 },
+          { tex: pathEdges[1][0].labelTex, x: 13, y: 66 },
+          { tex: pathEdges[1][1].labelTex, x: 50, y: 82 },
+          { tex: pathEdges[1][2].labelTex, x: 87, y: 66 }
+        ]
+      };
+    }
+
+    function createDiagramNode(node) {
+      const element = document.createElement("div");
+      element.className = "diagram-node";
+      element.style.left = `${node.x}%`;
+      element.style.top = `${node.y}%`;
+      renderTex(element, termTexForPermutation(data.perms[node.index]), false);
+      return element;
+    }
+
+    function createDiagramLabel(label) {
+      const element = document.createElement("div");
+      element.className = "diagram-edge-label";
+      element.style.left = `${label.x}%`;
+      element.style.top = `${label.y}%`;
+      renderTex(element, label.tex, false);
+      return element;
+    }
+
+    function createDiagramSvg(arrows) {
+      const markerBaseId = `diagram-arrowhead-${Math.random().toString(36).slice(2)}`;
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("viewBox", "0 0 100 100");
+      svg.setAttribute("preserveAspectRatio", "none");
+
+      const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+      const markerByColor = new Map();
+      for (const color of new Set(arrows.map(diagramArrowColor))) {
+        const markerId = `${markerBaseId}-${markerByColor.size}`;
+        const marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
+        marker.setAttribute("id", markerId);
+        marker.setAttribute("viewBox", "0 0 10 10");
+        marker.setAttribute("refX", "8.5");
+        marker.setAttribute("refY", "5");
+        marker.setAttribute("markerWidth", "9");
+        marker.setAttribute("markerHeight", "9");
+        marker.setAttribute("markerUnits", "strokeWidth");
+        marker.setAttribute("orient", "auto-start-reverse");
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", "M 0 0 L 10 5 L 0 10 z");
+        path.setAttribute("fill", color);
+        marker.append(path);
+        defs.append(marker);
+        markerByColor.set(color, markerId);
+      }
+      svg.append(defs);
+
+      for (const arrow of arrows) {
+        const color = diagramArrowColor(arrow);
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", arrow.from[0]);
+        line.setAttribute("y1", arrow.from[1]);
+        line.setAttribute("x2", arrow.to[0]);
+        line.setAttribute("y2", arrow.to[1]);
+        line.setAttribute("stroke", color);
+        line.setAttribute("stroke-width", DIAGRAM_ARROW_STROKE_WIDTH);
+        line.setAttribute("stroke-linecap", "round");
+        line.setAttribute("vector-effect", "non-scaling-stroke");
+        line.setAttribute("marker-end", `url(#${markerByColor.get(color)})`);
+        svg.append(line);
+      }
+
+      return svg;
+    }
+
+    function diagramArrowColor(arrow) {
+      return DIAGRAM_PATH_COLORS[arrow.path] ?? "#353b44";
+    }
+
+    function resetView() {
+      camera.position.copy(homeDirection).multiplyScalar(homeDistance());
+      camera.up.set(0, 1, 0);
+      controls.target.set(0, 0, 0);
+      view.autoRotate = false;
+      toggles.auto.checked = false;
+      scaleControl.value = "100";
+      root.rotation.set(0, 0, 0);
+      setModelScale(1, false);
+      controls.handleResize();
+      controls.update();
+    }
+
+    function homeDistance() {
+      return 8.55 * Math.max(1, 0.92 / camera.aspect);
+    }
+
+    function resize() {
+      const rect = host.getBoundingClientRect();
+      view.width = Math.max(1, rect.width);
+      view.height = Math.max(1, rect.height);
+      camera.aspect = view.width / view.height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(view.width, view.height, false);
+      controls.handleResize();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (view.autoRotate) {
+        root.rotateY(0.006);
+      }
+      controls.update();
+      updateHover();
+      renderer.render(scene, camera);
+    }
+  </script>
+</body>
+</html>
