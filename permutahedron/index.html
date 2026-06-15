@@ -513,7 +513,7 @@
     const TRACKBALL_ROTATE_SPEED = 1.75;
     const TOUCH_SCALE_SPEED = 0.74;
     const TOUCH_TWIST_SPEED = 1.15;
-    const DIAGRAM_PATH_COLORS = ["#245c5a", "#5b496f"];
+    const DIAGRAM_PATH_COLORS = ["#008f8b", "#7c3aed"];
     const DIAGRAM_ARROW_STROKE_WIDTH = "1.28";
     const FACE_PATH_EDGE_SCALE = {
       body: 1.75,
@@ -539,6 +539,8 @@
     };
     const facePathEdgeMaterials = DIAGRAM_PATH_COLORS.map(color => new THREE.MeshStandardMaterial({
       color,
+      emissive: color,
+      emissiveIntensity: 0.18,
       roughness: 0.38,
       metalness: 0.16
     }));
