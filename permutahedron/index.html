@@ -492,7 +492,7 @@
       </label>
       <label class="range">
         <span>Scale</span>
-        <input id="scale-control" type="range" min="50" max="180" value="100" step="1">
+        <input id="scale-control" type="range" min="50" max="130" value="100" step="1">
       </label>
       <button id="reset-view" type="button">Reset</button>
     </nav>
@@ -513,6 +513,8 @@
     const TRACKBALL_ROTATE_SPEED = 1.75;
     const TOUCH_SCALE_SPEED = 0.74;
     const TOUCH_TWIST_SPEED = 1.15;
+    const SCALE_FIT_MARGIN = 0.93;
+    const SCALE_GEOMETRY_PADDING = 0.22;
     const DIAGRAM_PATH_COLORS = ["#008f8b", "#7c3aed"];
     const DIAGRAM_ARROW_STROKE_WIDTH = "1.28";
     const FACE_PATH_EDGE_SCALE = {
@@ -602,6 +604,7 @@
 
     const data = buildPermutahedronData();
     const boundary = buildBoundaryHomotopies(data);
+    const scaleFitRadius = computeScaleFitRadius(data);
     const faceMesh = createFaceMesh(data);
     const edgeGroup = createEdgeGroup(data);
     const vertexGroup = createVertexGroup(data);
@@ -1437,6 +1440,21 @@
       }
     }
 
+    function computeScaleFitRadius({ points }) {
+      return Math.max(...points.map(point => point.length())) + SCALE_GEOMETRY_PADDING;
+    }
+
+    function updateScaleBounds() {
+      const min = Number(scaleControl.min) / 100;
+      const distance = camera.position.distanceTo(controls.target);
+      const verticalHalfSize = distance * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2);
+      const horizontalHalfSize = verticalHalfSize * camera.aspect;
+      const fitHalfSize = Math.min(verticalHalfSize, horizontalHalfSize);
+      const maxScale = Math.max(min, (fitHalfSize * SCALE_FIT_MARGIN) / scaleFitRadius);
+      scaleControl.max = String(Math.floor(maxScale * 100));
+      setModelScale(root.scale.x);
+    }
+
     function stopAutoRotate() {
       view.autoRotate = false;
       toggles.auto.checked = false;
@@ -2048,11 +2066,11 @@
       controls.target.set(0, 0, 0);
       view.autoRotate = false;
       toggles.auto.checked = false;
-      scaleControl.value = "100";
       root.rotation.set(0, 0, 0);
-      setModelScale(1, false);
       controls.handleResize();
       controls.update();
+      updateScaleBounds();
+      setModelScale(1);
     }
 
     function homeDistance() {
@@ -2067,6 +2085,7 @@
       camera.updateProjectionMatrix();
       renderer.setSize(view.width, view.height, false);
       controls.handleResize();
+      updateScaleBounds();
     }
 
     function animate() {
