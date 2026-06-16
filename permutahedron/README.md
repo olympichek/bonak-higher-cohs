@@ -32,8 +32,8 @@ For `t <= s <= r <= q <= k`, write the square coherence as
 
 ```text
 δ-δ-sq (t, s, α, ζ; r, q, γ, β) :
-  δ-δ r+2 q+2 γ β • δ-δ t s α ζ =
-  δ-δ t s α ζ     • δ-δ r+2 q+2 γ β
+  δ-δ r q γ β • δ-δ t s α ζ =
+  δ-δ t s α ζ • δ-δ r q γ β
 ```
 
 This says that the swap of the right pair `(γ, β)` commutes with the swap
