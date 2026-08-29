@@ -171,19 +171,19 @@ future version of the construction beyond \texttt{HSet}.
 \renewcommand{\arraystretch}{1.25}
 \begin{tabular}{@{}p{0.43\textwidth}@{\quad}l@{\ }c@{\ }l@{}}
 $\delta\text{-}\delta\ r\ q\ \gamma\ \beta\ (r \le q \le k):$ &
-$\del{r}{\gamma} \comp \del{q+1}{\beta}$ & $=$ & $\del{q}{\beta} \comp \del{r}{\gamma}$ \\[0.35em]
+$\del{q}{\beta} \comp \del{r}{\gamma}$ & $=$ & $\del{r}{\gamma} \comp \del{q+1}{\beta}$ \\[0.35em]
 $\delta\text{-}\varepsilon^\downarrow\text{-}\mathrm{id}\ r\ \beta\ (r \le k):$ &
-$\del{r}{\beta} \comp \epsd{r}$ & $=$ & $\id$ \\[0.35em]
+$\id$ & $=$ & $\del{r}{\beta} \comp \epsd{r}$ \\[0.35em]
 $\delta\text{-}\varepsilon^\downarrow\text{-}\mathrm{inf}\ r\ q\ \beta\ (r \le q \le k):$ &
-$\del{r}{\beta} \comp \epsd{q+1}$ & $=$ & $\epsd{q} \comp \del{r}{\beta}$ \\[0.35em]
+$\epsd{q} \comp \del{r}{\beta}$ & $=$ & $\del{r}{\beta} \comp \epsd{q+1}$ \\[0.35em]
 $\delta\text{-}\varepsilon^\downarrow\text{-}\mathrm{sup}\ r\ q\ \beta\ (q \le r \le k):$ &
-$\del{r+1}{\beta} \comp \epsd{q}$ & $=$ & $\epsd{q} \comp \del{r}{\beta}$ \\[0.35em]
+$\epsd{q} \comp \del{r}{\beta}$ & $=$ & $\del{r+1}{\beta} \comp \epsd{q}$ \\[0.35em]
 $\delta\text{-}\varepsilon^\uparrow\text{-}\mathrm{sup}\ r\ q\ \beta\ (q \le p)\ (r \le k):$ &
-$\del{r}{\beta} \comp \epsu{q}$ & $=$ & $\epsu{q} \comp \del{r}{\beta}$ \\[0.35em]
+$\epsu{q} \comp \del{r}{\beta}$ & $=$ & $\del{r}{\beta} \comp \epsu{q}$ \\[0.35em]
 $\varepsilon^\downarrow\text{-}\varepsilon^\downarrow\ r\ q\ (q \le r \le k):$ &
-$\epsd{r+1} \comp \epsd{q}$ & $=$ & $\epsd{q} \comp \epsd{r}$ \\[0.35em]
+$\epsd{q} \comp \epsd{r}$ & $=$ & $\epsd{r+1} \comp \epsd{q}$ \\[0.35em]
 $\varepsilon^\downarrow\text{-}\varepsilon^\uparrow\ r\ q\ (q \le p)\ (r \le k):$ &
-$\epsd{r} \comp \epsu{q}$ & $=$ & $\epsu{q} \comp \epsd{r}$ \\[0.35em]
+$\epsu{q} \comp \epsd{r}$ & $=$ & $\epsd{r} \comp \epsu{q}$ \\[0.35em]
 $\varepsilon^\uparrow\text{-}\varepsilon^\uparrow\ r\ q\ (q \le r \le p):$ &
 $\epsu{r+1} \comp \epsu{q}$ & $=$ & $\epsu{q} \comp \epsu{r}$
 \end{tabular}
@@ -192,168 +192,168 @@ $\epsu{r+1} \comp \epsu{q}$ & $=$ & $\epsu{q} \comp \epsu{r}$
 \begin{frame}{$\delta$-$\delta$-hex}
 \centerslidediagram{
   \fithexdiagram{\HexTermCohDiagram
-    {\termthree{\del{s}{\alpha}}{\del{r+1}{\gamma}}{\del{q+2}{\beta}}}
-    {\termthree{\del{s}{\alpha}}{\del{q+1}{\beta}}{\del{r+1}{\gamma}}}
-    {\termthree{\del{q}{\beta}}{\del{s}{\alpha}}{\del{r+1}{\gamma}}}
     {\termthree{\del{q}{\beta}}{\del{r}{\gamma}}{\del{s}{\alpha}}}
-    {\termthree{\del{r}{\gamma}}{\del{q+1}{\beta}}{\del{s}{\alpha}}}
+    {\termthree{\del{q}{\beta}}{\del{s}{\alpha}}{\del{r+1}{\gamma}}}
+    {\termthree{\del{s}{\alpha}}{\del{q+1}{\beta}}{\del{r+1}{\gamma}}}
+    {\termthree{\del{s}{\alpha}}{\del{r+1}{\gamma}}{\del{q+2}{\beta}}}
     {\termthree{\del{r}{\gamma}}{\del{s}{\alpha}}{\del{q+2}{\beta}}}
-    {{\HCdd{r+1}{q+1}{\gamma}{\beta}}{\HCdd{s}{q}{\alpha}{\beta}}{\HCdd{s}{r}{\alpha}{\gamma}}}
-    {{\HCdd{s}{r}{\alpha}{\gamma}}{\HCdd{s}{q+1}{\alpha}{\beta}}{\HCdd{r}{q}{\gamma}{\beta}}}}
+    {\termthree{\del{r}{\gamma}}{\del{q+1}{\beta}}{\del{s}{\alpha}}}
+    {{\HCdd{s}{r}{\alpha}{\gamma}}{\HCdd{s}{q}{\alpha}{\beta}}{\HCdd{r+1}{q+1}{\gamma}{\beta}}}
+    {{\HCdd{r}{q}{\gamma}{\beta}}{\HCdd{s}{q+1}{\alpha}{\beta}}{\HCdd{s}{r}{\alpha}{\gamma}}}}
 }
 \end{frame}
 
 \begin{frame}{$\delta$-$\delta$-sq}
 \centerslidediagram{
   \fitdiagram{\SquareTermCohDiagram
-    {\termfour{\del{t}{\alpha}}{\del{s+1}{\zeta}}{\del{r}{\gamma}}{\del{q+1}{\beta}}}
+    {\termfour{\del{s}{\zeta}}{\del{t}{\alpha}}{\del{q}{\beta}}{\del{r}{\gamma}}}
     {\termfour{\del{t}{\alpha}}{\del{s+1}{\zeta}}{\del{q}{\beta}}{\del{r}{\gamma}}}
     {\termfour{\del{s}{\zeta}}{\del{t}{\alpha}}{\del{r}{\gamma}}{\del{q+1}{\beta}}}
-    {\termfour{\del{s}{\zeta}}{\del{t}{\alpha}}{\del{q}{\beta}}{\del{r}{\gamma}}}
+    {\termfour{\del{t}{\alpha}}{\del{s+1}{\zeta}}{\del{r}{\gamma}}{\del{q+1}{\beta}}}
+    {\HCdd{t}{s}{\alpha}{\zeta}}
     {\HCdd{r}{q}{\gamma}{\beta}}
-    {\HCdd{t}{s}{\alpha}{\zeta}}
-    {\HCdd{t}{s}{\alpha}{\zeta}}
-    {\HCdd{r}{q}{\gamma}{\beta}}}
+    {\HCdd{r}{q}{\gamma}{\beta}}
+    {\HCdd{t}{s}{\alpha}{\zeta}}}
 }
 \end{frame}
 
 \begin{frame}{$\delta$-$\epsdmark$-id}
 \centerslidediagram{
   \fitdiagram{\SquareTermCohDiagramRevB
-    {\termthree{\del{s}{\alpha}}{\del{r+1}{\beta}}{\epsd{r+1}}}
-    {\termthree{\del{r}{\beta}}{\del{s}{\alpha}}{\epsd{r+1}}}
     {\termone{\del{s}{\alpha}}}
     {\termthree{\del{r}{\beta}}{\epsd{r}}{\del{s}{\alpha}}}
-    {\HCdd{s}{r}{\alpha}{\beta}}
+    {\termthree{\del{s}{\alpha}}{\del{r+1}{\beta}}{\epsd{r+1}}}
+    {\termthree{\del{r}{\beta}}{\del{s}{\alpha}}{\epsd{r+1}}}
+    {\HCdeid{r}{\beta}}
     {\HCedinf{s}{r}{\alpha}}
     {\HCdeid{r+1}{\beta}}
-    {\HCdeid{r}{\beta}}}
+    {\HCdd{s}{r}{\alpha}{\beta}}}
 }
 \end{frame}
 
 \begin{frame}{$\delta$-$\epsdmark$-inf}
 \centerslidediagram{
   \fithexdiagram{\HexTermCohDiagram
-    {\termthree{\del{s}{\alpha}}{\del{r+1}{\beta}}{\epsd{q+2}}}
-    {\termthree{\del{s}{\alpha}}{\epsd{q+1}}{\del{r+1}{\beta}}}
-    {\termthree{\epsd{q}}{\del{s}{\alpha}}{\del{r+1}{\beta}}}
     {\termthree{\epsd{q}}{\del{r}{\beta}}{\del{s}{\alpha}}}
-    {\termthree{\del{r}{\beta}}{\epsd{q+1}}{\del{s}{\alpha}}}
+    {\termthree{\epsd{q}}{\del{s}{\alpha}}{\del{r+1}{\beta}}}
+    {\termthree{\del{s}{\alpha}}{\epsd{q+1}}{\del{r+1}{\beta}}}
+    {\termthree{\del{s}{\alpha}}{\del{r+1}{\beta}}{\epsd{q+2}}}
     {\termthree{\del{r}{\beta}}{\del{s}{\alpha}}{\epsd{q+2}}}
-    {{\HCedinf{r+1}{q+1}{\beta}}{\HCedinf{s}{q}{\alpha}}{\HCdd{s}{r}{\alpha}{\beta}}}
-    {{\HCdd{s}{r}{\alpha}{\beta}}{\HCedinf{s}{q+1}{\alpha}}{\HCedinf{r}{q}{\beta}}}}
+    {\termthree{\del{r}{\beta}}{\epsd{q+1}}{\del{s}{\alpha}}}
+    {{\HCdd{s}{r}{\alpha}{\beta}}{\HCedinf{s}{q}{\alpha}}{\HCedinf{r+1}{q+1}{\beta}}}
+    {{\HCedinf{r}{q}{\beta}}{\HCedinf{s}{q+1}{\alpha}}{\HCdd{s}{r}{\alpha}{\beta}}}}
 }
 \end{frame}
 
 \begin{frame}{$\delta$-$\epsdmark$-sup}
 \centerslidediagram{
   \fithexdiagram{\HexTermCohDiagram
-    {\termthree{\del{s}{\alpha}}{\del{r+2}{\beta}}{\epsd{q+1}}}
-    {\termthree{\del{s}{\alpha}}{\epsd{q+1}}{\del{r+1}{\beta}}}
-    {\termthree{\epsd{q}}{\del{s}{\alpha}}{\del{r+1}{\beta}}}
     {\termthree{\epsd{q}}{\del{r}{\beta}}{\del{s}{\alpha}}}
-    {\termthree{\del{r+1}{\beta}}{\epsd{q}}{\del{s}{\alpha}}}
+    {\termthree{\epsd{q}}{\del{s}{\alpha}}{\del{r+1}{\beta}}}
+    {\termthree{\del{s}{\alpha}}{\epsd{q+1}}{\del{r+1}{\beta}}}
+    {\termthree{\del{s}{\alpha}}{\del{r+2}{\beta}}{\epsd{q+1}}}
     {\termthree{\del{r+1}{\beta}}{\del{s}{\alpha}}{\epsd{q+1}}}
-    {{\HCedsup{r+1}{q+1}{\beta}}{\HCedinf{s}{q}{\alpha}}{\HCdd{s}{r}{\alpha}{\beta}}}
-    {{\HCdd{s}{r+1}{\alpha}{\beta}}{\HCedinf{s}{q}{\alpha}}{\HCedsup{r}{q}{\beta}}}}
+    {\termthree{\del{r+1}{\beta}}{\epsd{q}}{\del{s}{\alpha}}}
+    {{\HCdd{s}{r}{\alpha}{\beta}}{\HCedinf{s}{q}{\alpha}}{\HCedsup{r+1}{q+1}{\beta}}}
+    {{\HCedsup{r}{q}{\beta}}{\HCedinf{s}{q}{\alpha}}{\HCdd{s}{r+1}{\alpha}{\beta}}}}
 }
 \end{frame}
 
 \begin{frame}{$\delta$-$\epsumark$-sup (S)}
 \centerslidediagram{
   \fithexdiagram{\HexTermCohDiagram
-    {\termthree{\del{s}{\alpha}}{\del{r+1}{\beta}}{\epsu{q}}}
-    {\termthree{\del{s}{\alpha}}{\epsu{q}}{\del{r+1}{\beta}}}
-    {\termthree{\epsu{q}}{\del{s}{\alpha}}{\del{r+1}{\beta}}}
     {\termthree{\epsu{q}}{\del{r}{\beta}}{\del{s}{\alpha}}}
-    {\termthree{\del{r}{\beta}}{\epsu{q}}{\del{s}{\alpha}}}
+    {\termthree{\epsu{q}}{\del{s}{\alpha}}{\del{r+1}{\beta}}}
+    {\termthree{\del{s}{\alpha}}{\epsu{q}}{\del{r+1}{\beta}}}
+    {\termthree{\del{s}{\alpha}}{\del{r+1}{\beta}}{\epsu{q}}}
     {\termthree{\del{r}{\beta}}{\del{s}{\alpha}}{\epsu{q}}}
-    {{\HCeusup{r+1}{q}{\beta}}{\HCeusup{s}{q}{\alpha}}{\HCdd{s}{r}{\alpha}{\beta}}}
-    {{\HCdd{s}{r}{\alpha}{\beta}}{\HCeusup{s}{q}{\alpha}}{\HCeusup{r}{q}{\beta}}}}
+    {\termthree{\del{r}{\beta}}{\epsu{q}}{\del{s}{\alpha}}}
+    {{\HCdd{s}{r}{\alpha}{\beta}}{\HCeusup{s}{q}{\alpha}}{\HCeusup{r+1}{q}{\beta}}}
+    {{\HCeusup{r}{q}{\beta}}{\HCeusup{s}{q}{\alpha}}{\HCdd{s}{r}{\alpha}{\beta}}}}
 }
 \end{frame}
 
 \begin{frame}{$\delta$-$\epsumark$-sup (0)}
 \centerslidediagram{
   \fitdiagram{\SquareTermCohDiagram
-    {\termthree{\del{s}{\alpha}}{\del{r+1}{\beta}}{\epsd{s}}}
+    {\termone{\del{r}{\beta}}}
     {\termthree{\del{s}{\alpha}}{\epsd{s}}{\del{r}{\beta}}}
     {\termthree{\del{r}{\beta}}{\del{s}{\alpha}}{\epsd{s}}}
-    {\termone{\del{r}{\beta}}}
+    {\termthree{\del{s}{\alpha}}{\del{r+1}{\beta}}{\epsd{s}}}
+    {\HCdeid{s}{\alpha}}
     {\HCedsup{r}{s}{\beta}}
     {\HCdeid{s}{\alpha}}
-    {\HCdd{s}{r}{\alpha}{\beta}}
-    {\HCdeid{s}{\alpha}}}
+    {\HCdd{s}{r}{\alpha}{\beta}}}
 }
 \end{frame}
 
 \begin{frame}{$\epsdmark$-$\epsdmark$}
 \centerslidediagram{
   \fithexdiagram{\HexTermCohDiagram
-    {\termthree{\del{s}{\alpha}}{\epsd{r+2}}{\epsd{q+1}}}
-    {\termthree{\del{s}{\alpha}}{\epsd{q+1}}{\epsd{r+1}}}
-    {\termthree{\epsd{q}}{\del{s}{\alpha}}{\epsd{r+1}}}
     {\termthree{\epsd{q}}{\epsd{r}}{\del{s}{\alpha}}}
-    {\termthree{\epsd{r+1}}{\epsd{q}}{\del{s}{\alpha}}}
+    {\termthree{\epsd{q}}{\del{s}{\alpha}}{\epsd{r+1}}}
+    {\termthree{\del{s}{\alpha}}{\epsd{q+1}}{\epsd{r+1}}}
+    {\termthree{\del{s}{\alpha}}{\epsd{r+2}}{\epsd{q+1}}}
     {\termthree{\epsd{r+1}}{\del{s}{\alpha}}{\epsd{q+1}}}
-    {{\HCeded{r+1}{q+1}}{\HCedinf{s}{q}{\alpha}}{\HCedinf{s}{r}{\alpha}}}
-    {{\HCedinf{s}{r+1}{\alpha}}{\HCedinf{s}{q}{\alpha}}{\HCeded{r}{q}}}}
+    {\termthree{\epsd{r+1}}{\epsd{q}}{\del{s}{\alpha}}}
+    {{\HCedinf{s}{r}{\alpha}}{\HCedinf{s}{q}{\alpha}}{\HCeded{r+1}{q+1}}}
+    {{\HCeded{r}{q}}{\HCedinf{s}{q}{\alpha}}{\HCedinf{s}{r+1}{\alpha}}}}
 }
 \end{frame}
 
 \begin{frame}{$\epsdmark$-$\epsumark$ (S)}
 \centerslidediagram{
   \fithexdiagram{\HexTermCohDiagram
-    {\termthree{\del{s}{\alpha}}{\epsd{r+1}}{\epsu{q}}}
-    {\termthree{\del{s}{\alpha}}{\epsu{q}}{\epsd{r+1}}}
-    {\termthree{\epsu{q}}{\del{s}{\alpha}}{\epsd{r+1}}}
     {\termthree{\epsu{q}}{\epsd{r}}{\del{s}{\alpha}}}
-    {\termthree{\epsd{r}}{\epsu{q}}{\del{s}{\alpha}}}
+    {\termthree{\epsu{q}}{\del{s}{\alpha}}{\epsd{r+1}}}
+    {\termthree{\del{s}{\alpha}}{\epsu{q}}{\epsd{r+1}}}
+    {\termthree{\del{s}{\alpha}}{\epsd{r+1}}{\epsu{q}}}
     {\termthree{\epsd{r}}{\del{s}{\alpha}}{\epsu{q}}}
-    {{\HCeued{r+1}{q}}{\HCeusup{s}{q}{\alpha}}{\HCedinf{s}{r}{\alpha}}}
-    {{\HCedinf{s}{r}{\alpha}}{\HCeusup{s}{q}{\alpha}}{\HCeued{r}{q}}}}
+    {\termthree{\epsd{r}}{\epsu{q}}{\del{s}{\alpha}}}
+    {{\HCedinf{s}{r}{\alpha}}{\HCeusup{s}{q}{\alpha}}{\HCeued{r+1}{q}}}
+    {{\HCeued{r}{q}}{\HCeusup{s}{q}{\alpha}}{\HCedinf{s}{r}{\alpha}}}}
 }
 \end{frame}
 
 \begin{frame}{$\epsdmark$-$\epsumark$ (0)}
 \centerslidediagram{
   \fitdiagram{\SquareTermCohDiagram
-    {\termthree{\del{s}{\alpha}}{\epsd{r+1}}{\epsd{s}}}
+    {\termone{\epsd{r}}}
     {\termthree{\del{s}{\alpha}}{\epsd{s}}{\epsd{r}}}
     {\termthree{\epsd{r}}{\del{s}{\alpha}}{\epsd{s}}}
-    {\termone{\epsd{r}}}
+    {\termthree{\del{s}{\alpha}}{\epsd{r+1}}{\epsd{s}}}
+    {\HCdeid{s}{\alpha}}
     {\HCeded{r}{s}}
     {\HCdeid{s}{\alpha}}
-    {\HCedinf{s}{r}{\alpha}}
-    {\HCdeid{s}{\alpha}}}
+    {\HCedinf{s}{r}{\alpha}}}
 }
 \end{frame}
 
 \begin{frame}{$\epsumark$-$\epsumark$ (S)}
 \centerslidediagram{
   \fithexdiagram{\HexTermCohDiagram
+    {\termthree{\epsu{r+1}}{\epsu{q}}{\del{s}{\alpha}}}
+    {\termthree{\epsu{r+1}}{\del{s}{\alpha}}{\epsu{q}}}
     {\termthree{\del{s}{\alpha}}{\epsu{r+1}}{\epsu{q}}}
     {\termthree{\del{s}{\alpha}}{\epsu{q}}{\epsu{r}}}
     {\termthree{\epsu{q}}{\del{s}{\alpha}}{\epsu{r}}}
     {\termthree{\epsu{q}}{\epsu{r}}{\del{s}{\alpha}}}
-    {\termthree{\epsu{r+1}}{\epsu{q}}{\del{s}{\alpha}}}
-    {\termthree{\epsu{r+1}}{\del{s}{\alpha}}{\epsu{q}}}
-    {{\HCeueu{r}{q}}{\HCeusup{s}{q}{\alpha}}{\HCeusup{s}{r}{\alpha}}}
-    {{\HCeusup{s}{r+1}{\alpha}}{\HCeusup{s}{q}{\alpha}}{\HCeueu{r}{q}}}}
+    {{\HCeusup{s}{q}{\alpha}}{\HCeusup{s}{r+1}{\alpha}}{\HCeueu{r}{q}}}
+    {{\HCeueu{r}{q}}{\HCeusup{s}{r}{\alpha}}{\HCeusup{s}{q}{\alpha}}}}
 }
 \end{frame}
 
 \begin{frame}{$\epsumark$-$\epsumark$ (0)}
 \centerslidediagram{
   \fitdiagram{\SquareTermCohDiagramRevB
-    {\termthree{\del{s}{\alpha}}{\epsd{s}}{\epsu{r}}}
-    {\termthree{\del{s}{\alpha}}{\epsu{r}}{\epsd{s}}}
     {\termone{\epsu{r}}}
     {\termthree{\epsu{r}}{\del{s}{\alpha}}{\epsd{s}}}
-    {\HCeued{s}{r}}
+    {\termthree{\del{s}{\alpha}}{\epsd{s}}{\epsu{r}}}
+    {\termthree{\del{s}{\alpha}}{\epsu{r}}{\epsd{s}}}
+    {\HCdeid{s}{\alpha}}
     {\HCeusup{s}{r}{\alpha}}
     {\HCdeid{s}{\alpha}}
-    {\HCdeid{s}{\alpha}}}
+    {\HCeued{s}{r}}}
 }
 \end{frame}
 

@@ -20,8 +20,8 @@ For `s <= r <= q <= k`, write the `δ-δ` hexagon as
 
 ```text
 δ-δ-hex (s, r, q, α, γ, β) :
-  δ-δ r+1 q+1 γ β • δ-δ s q α β   • δ-δ s r α γ =
-  δ-δ s r α γ     • δ-δ s q+1 α β • δ-δ r q γ β
+  δ-δ s r α γ • δ-δ s q α β   • δ-δ r+1 q+1 γ β =
+  δ-δ r q γ β • δ-δ s q+1 α β • δ-δ s r α γ
 ```
 
 That is the coherence already represented by `mkCoh2FrameType` in the
@@ -32,8 +32,8 @@ For `t <= s <= r <= q <= k`, write the square coherence as
 
 ```text
 δ-δ-sq (t, s, α, ζ; r, q, γ, β) :
-  δ-δ r q γ β • δ-δ t s α ζ =
-  δ-δ t s α ζ • δ-δ r q γ β
+  δ-δ t s α ζ • δ-δ r q γ β =
+  δ-δ r q γ β • δ-δ t s α ζ
 ```
 
 This says that the swap of the right pair `(γ, β)` commutes with the swap
@@ -57,13 +57,13 @@ and arities
 The starting four-fold restriction is
 
 ```text
-δ t α ∘ δ s+1 ζ ∘ δ r+2 γ ∘ δ q+3 β
+δ q β ∘ δ r γ ∘ δ s ζ ∘ δ t α
 ```
 
-and the fully reversed target is
+and the target is
 
 ```text
-δ q β ∘ δ r γ ∘ δ s ζ ∘ δ t α.
+δ t α ∘ δ s+1 ζ ∘ δ r+2 γ ∘ δ q+3 β.
 ```
 
 Use a word in `1,2,3` to denote a composite of `δ-δ` rewrites:
@@ -72,41 +72,41 @@ Use a word in `1,2,3` to denote a composite of `δ-δ` rewrites:
 - `2` swaps the current second and third restrictions;
 - `3` swaps the current third and fourth restrictions.
 
-For example, `δδ[321323]` is the path which first moves `β` left, then
-moves `γ` left:
+For example, `δδ[321323]` follows the adjacent swap positions
+`3,2,1,3,2,3` from the source to the target:
 
 ```text
 δδ[321323] :=
-  δ-δ r+2 q+2 γ β •
-  δ-δ s+1 q+1 ζ β •
+  δ-δ t s α ζ     •
+  δ-δ t r α γ     •
   δ-δ t q α β     •
   δ-δ s+1 r+1 ζ γ •
-  δ-δ t r α γ     •
-  δ-δ t s α ζ
+  δ-δ s+1 q+1 ζ β •
+  δ-δ r+2 q+2 γ β
 ```
 
-while `δδ[121321]` is another path to the fully reversed target:
+while `δδ[121321]` is another path to the same target:
 
 ```text
 δδ[121321] :=
-  δ-δ t s α ζ   •
-  δ-δ t r+1 α γ •
+  δ-δ r q γ β   •
+  δ-δ s q+1 ζ β •
   δ-δ s r ζ γ   •
   δ-δ t q+2 α β •
-  δ-δ s q+1 ζ β •
-  δ-δ r q γ β
+  δ-δ t r+1 α γ •
+  δ-δ t s α ζ
 ```
 
 Both are paths from
 
 ```text
-δ t α ∘ δ s+1 ζ ∘ δ r+2 γ ∘ δ q+3 β
+δ q β ∘ δ r γ ∘ δ s ζ ∘ δ t α
 ```
 
 to
 
 ```text
-δ q β ∘ δ r γ ∘ δ s ζ ∘ δ t α.
+δ t α ∘ δ s+1 ζ ∘ δ r+2 γ ∘ δ q+3 β.
 ```
 
 The permutahedron coherence is a 3-cell between two homotopies from
@@ -133,14 +133,14 @@ This side uses four hexagonal faces and three square faces.
 Expanding the `δδ[...]` notation, the first boundary homotopy is:
 
 ```text
-δ-δ r+2 q+2 γ β • δ-δ s+1 q+1 ζ β • δ-δ t q α β   • δ-δ s+1 r+1 ζ γ • δ-δ t r α γ   • δ-δ t s α ζ =[δ-δ-hex(t, s, r, α, ζ, γ)]=
-δ-δ r+2 q+2 γ β • δ-δ s+1 q+1 ζ β • δ-δ t q α β   • δ-δ t s α ζ     • δ-δ t r+1 α γ • δ-δ s r ζ γ =[δ-δ-hex(t, s, q, α, ζ, β)]=
-δ-δ r+2 q+2 γ β • δ-δ t s α ζ     • δ-δ t q+1 α β • δ-δ s q ζ β     • δ-δ t r+1 α γ • δ-δ s r ζ γ =[δ-δ-sq(r+2, q+2, γ, β; t s α ζ)]=
-δ-δ t s α ζ     • δ-δ r+2 q+2 γ β • δ-δ t q+1 α β • δ-δ s q ζ β     • δ-δ t r+1 α γ • δ-δ s r ζ γ =[δ-δ-sq(s q ζ β; t r+1 α γ)]=
-δ-δ t s α ζ     • δ-δ r+2 q+2 γ β • δ-δ t q+1 α β • δ-δ t r+1 α γ   • δ-δ s q ζ β   • δ-δ s r ζ γ =[δ-δ-hex(t, r+1, q+1, α, γ, β)]=
-δ-δ t s α ζ     • δ-δ t r+1 α γ   • δ-δ t q+2 α β • δ-δ r+1 q+1 γ β • δ-δ s q ζ β   • δ-δ s r ζ γ =[δ-δ-hex(s, r, q, ζ, γ, β)]=
-δ-δ t s α ζ     • δ-δ t r+1 α γ   • δ-δ t q+2 α β • δ-δ s r ζ γ     • δ-δ s q+1 ζ β • δ-δ r q γ β =[δ-δ-sq(t, q+2, α, β; s, r, ζ, γ)]=
-δ-δ t s α ζ     • δ-δ t r+1 α γ   • δ-δ s r ζ γ   • δ-δ t q+2 α β   • δ-δ s q+1 ζ β • δ-δ r q γ β
+δ-δ t s α ζ • δ-δ t r α γ   • δ-δ t q α β   • δ-δ s+1 r+1 ζ γ • δ-δ s+1 q+1 ζ β • δ-δ r+2 q+2 γ β =[δ-δ-hex(s+1, r+1, q+1, ζ, γ, β)]=
+δ-δ t s α ζ • δ-δ t r α γ   • δ-δ t q α β   • δ-δ r+1 q+1 γ β • δ-δ s+1 q+2 ζ β • δ-δ s+1 r+1 ζ γ =[δ-δ-hex(t, r, q, α, γ, β)]=
+δ-δ t s α ζ • δ-δ r q γ β   • δ-δ t q+1 α β • δ-δ t r α γ     • δ-δ s+1 q+2 ζ β • δ-δ s+1 r+1 ζ γ =[δ-δ-sq(t, s, α, ζ; r, q, γ, β)]=
+δ-δ r q γ β • δ-δ t s α ζ   • δ-δ t q+1 α β • δ-δ t r α γ     • δ-δ s+1 q+2 ζ β • δ-δ s+1 r+1 ζ γ =[δ-δ-sq(t, r, α, γ; s+1, q+2, ζ, β)]=
+δ-δ r q γ β • δ-δ t s α ζ   • δ-δ t q+1 α β • δ-δ s+1 q+2 ζ β • δ-δ t r α γ     • δ-δ s+1 r+1 ζ γ =[δ-δ-hex(t, s, q+1, α, ζ, β)]=
+δ-δ r q γ β • δ-δ s q+1 ζ β • δ-δ t q+2 α β • δ-δ t s α ζ     • δ-δ t r α γ     • δ-δ s+1 r+1 ζ γ =[δ-δ-hex(t, s, r, α, ζ, γ)]=
+δ-δ r q γ β • δ-δ s q+1 ζ β • δ-δ t q+2 α β • δ-δ s r ζ γ     • δ-δ t r+1 α γ   • δ-δ t s α ζ     =[δ-δ-sq(t, q+2, α, β; s, r, ζ, γ)]=
+δ-δ r q γ β • δ-δ s q+1 ζ β • δ-δ s r ζ γ   • δ-δ t q+2 α β   • δ-δ t r+1 α γ   • δ-δ t s α ζ
 ```
 
 ## Second boundary homotopy
@@ -163,14 +163,14 @@ This side uses four hexagonal faces and three square faces.
 Expanding the `δδ[...]` notation, the second boundary homotopy is:
 
 ```text
-δ-δ r+2 q+2 γ β • δ-δ s+1 q+1 ζ β • δ-δ t q α β     • δ-δ s+1 r+1 ζ γ • δ-δ t r α γ   • δ-δ t s α ζ =[δ-δ-sq(t, q, α, β; s+1, r+1, ζ, γ)]=
-δ-δ r+2 q+2 γ β • δ-δ s+1 q+1 ζ β • δ-δ s+1 r+1 ζ γ • δ-δ t q α β     • δ-δ t r α γ   • δ-δ t s α ζ =[δ-δ-hex(s+1, r+1, q+1, ζ, γ, β)]=
-δ-δ s+1 r+1 ζ γ • δ-δ s+1 q+2 ζ β • δ-δ r+1 q+1 γ β • δ-δ t q α β     • δ-δ t r α γ   • δ-δ t s α ζ =[δ-δ-hex(t, r, q, α, γ, β)]=
-δ-δ s+1 r+1 ζ γ • δ-δ s+1 q+2 ζ β • δ-δ t r α γ     • δ-δ t q+1 α β   • δ-δ r q γ β   • δ-δ t s α ζ =[δ-δ-sq(s+1, q+2, ζ, β; t, r, α, γ)]=
-δ-δ s+1 r+1 ζ γ • δ-δ t r α γ     • δ-δ s+1 q+2 ζ β • δ-δ t q+1 α β   • δ-δ r q γ β   • δ-δ t s α ζ =[δ-δ-sq(r, q, γ, β; t, s, α, ζ)]=
-δ-δ s+1 r+1 ζ γ • δ-δ t r α γ     • δ-δ s+1 q+2 ζ β • δ-δ t q+1 α β   • δ-δ t s α ζ   • δ-δ r q γ β =[δ-δ-hex(t, s, q+1, α, ζ, β)]=
-δ-δ s+1 r+1 ζ γ • δ-δ t r α γ     • δ-δ t s α ζ     • δ-δ t q+2 α β   • δ-δ s q+1 ζ β • δ-δ r q γ β =[δ-δ-hex(t, s, r, α, ζ, γ)]=
-δ-δ t s α ζ     • δ-δ t r+1 α γ   • δ-δ s r ζ γ     • δ-δ t q+2 α β   • δ-δ s q+1 ζ β • δ-δ r q γ β
+δ-δ t s α ζ • δ-δ t r α γ   • δ-δ t q α β     • δ-δ s+1 r+1 ζ γ • δ-δ s+1 q+1 ζ β • δ-δ r+2 q+2 γ β =[δ-δ-sq(t, q, α, β; s+1, r+1, ζ, γ)]=
+δ-δ t s α ζ • δ-δ t r α γ   • δ-δ s+1 r+1 ζ γ • δ-δ t q α β     • δ-δ s+1 q+1 ζ β • δ-δ r+2 q+2 γ β =[δ-δ-hex(t, s, r, α, ζ, γ)]=
+δ-δ s r ζ γ • δ-δ t r+1 α γ • δ-δ t s α ζ     • δ-δ t q α β     • δ-δ s+1 q+1 ζ β • δ-δ r+2 q+2 γ β =[δ-δ-hex(t, s, q, α, ζ, β)]=
+δ-δ s r ζ γ • δ-δ t r+1 α γ • δ-δ s q ζ β     • δ-δ t q+1 α β   • δ-δ t s α ζ     • δ-δ r+2 q+2 γ β =[δ-δ-sq(t, r+1, α, γ; s, q, ζ, β)]=
+δ-δ s r ζ γ • δ-δ s q ζ β   • δ-δ t r+1 α γ   • δ-δ t q+1 α β   • δ-δ t s α ζ     • δ-δ r+2 q+2 γ β =[δ-δ-sq(t, s, α, ζ; r+2, q+2, γ, β)]=
+δ-δ s r ζ γ • δ-δ s q ζ β   • δ-δ t r+1 α γ   • δ-δ t q+1 α β   • δ-δ r+2 q+2 γ β • δ-δ t s α ζ     =[δ-δ-hex(t, r+1, q+1, α, γ, β)]=
+δ-δ s r ζ γ • δ-δ s q ζ β   • δ-δ r+1 q+1 γ β • δ-δ t q+2 α β   • δ-δ t r+1 α γ   • δ-δ t s α ζ     =[δ-δ-hex(s, r, q, ζ, γ, β)]=
+δ-δ r q γ β • δ-δ s q+1 ζ β • δ-δ s r ζ γ     • δ-δ t q+2 α β   • δ-δ t r+1 α γ   • δ-δ t s α ζ
 ```
 
 ## The 3-coherence
@@ -185,21 +185,21 @@ The `δ-δ` permutahedron coherence is the equality of the two homotopies above:
 
 ```text
 δ-δ-perm4 (t, s, r, q, α, ζ, γ, β):
-  δ-δ-hex(t, s, r, α, ζ, γ) •
-  δ-δ-hex(t, s, q, α, ζ, β) •
-  δ-δ-sq(r+2, q+2, γ, β; t s α ζ) •
-  δ-δ-sq(s, q, ζ, β; t, r+1, α, γ) •
-  δ-δ-hex(t, r+1, q+1, α, γ, β) •
-  δ-δ-hex(s, r, q, ζ, γ, β) •
+  δ-δ-hex(s+1, r+1, q+1, ζ, γ, β)    •
+  δ-δ-hex(t, r, q, α, γ, β)          •
+  δ-δ-sq(t, s, α, ζ; r, q, γ, β)     •
+  δ-δ-sq(t, r, α, γ; s+1, q+2, ζ, β) •
+  δ-δ-hex(t, s, q+1, α, ζ, β)        •
+  δ-δ-hex(t, s, r, α, ζ, γ)          •
   δ-δ-sq(t, q+2, α, β; s, r, ζ, γ)
     =[UIP]=
   δ-δ-sq(t, q, α, β; s+1, r+1, ζ, γ) •
-  δ-δ-hex(s+1, r+1, q+1, ζ, γ, β) •
-  δ-δ-hex(t, r, q, α, γ, β) •
-  δ-δ-sq(s+1, q+2, ζ, β; t, r, α, γ) •
-  δ-δ-sq(r, q, γ, β; t, s, α, ζ) •
-  δ-δ-hex(t, s, q+1, α, ζ, β) •
-  δ-δ-hex(t, s, r, α, ζ, γ) •
+  δ-δ-hex(t, s, r, α, ζ, γ)          •
+  δ-δ-hex(t, s, q, α, ζ, β)          •
+  δ-δ-sq(t, r+1, α, γ; s, q, ζ, β)   •
+  δ-δ-sq(t, s, α, ζ; r+2, q+2, γ, β) •
+  δ-δ-hex(t, r+1, q+1, α, γ, β)      •
+  δ-δ-hex(s, r, q, ζ, γ, β)
 ```
 
 Together, the two displayed boundary homotopies use

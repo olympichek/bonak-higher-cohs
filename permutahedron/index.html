@@ -755,7 +755,7 @@
     }
 
     function wordFaceVertices(prefix, localWord, permIndex) {
-      const perm = [1, 2, 3, 4];
+      const perm = [4, 3, 2, 1];
       for (const digit of prefix) applySwapDigit(perm, Number(digit));
       const indices = [permIndex.get(perm.join(""))];
       for (const digit of localWord) {
@@ -1024,7 +1024,7 @@
     function directedEdgeEndpoints(edge) {
       const startInversions = inversionCount(data.perms[edge.start]);
       const endInversions = inversionCount(data.perms[edge.end]);
-      return startInversions <= endInversions
+      return startInversions >= endInversions
         ? { source: edge.start, target: edge.end }
         : { source: edge.end, target: edge.start };
     }
@@ -1638,7 +1638,8 @@
         "Delta-delta permutahedron",
         "\\delta\\text{-}\\delta\\text{-}\\mathrm{perm}_4(t,s,r,q,\\alpha,\\zeta,\\gamma,\\beta)",
         [
-          { label: "vertex", tex: "\\delta_t^\\alpha\\circ\\delta_{s+1}^\\zeta\\circ\\delta_{r+2}^\\gamma\\circ\\delta_{q+3}^\\beta" },
+          { label: "source", tex: "\\delta_q^\\beta\\circ\\delta_r^\\gamma\\circ\\delta_s^\\zeta\\circ\\delta_t^\\alpha" },
+          { label: "target", tex: "\\delta_t^\\alpha\\circ\\delta_{s+1}^\\zeta\\circ\\delta_{r+2}^\\gamma\\circ\\delta_{q+3}^\\beta" },
           { label: "edge", tex: "\\delta\\text{-}\\delta\\text{ rewrite swapping adjacent restrictions}" },
           { label: "face", tex: "\\delta\\text{-}\\delta\\text{-}\\mathrm{hex}\\;\\text{or}\\;\\delta\\text{-}\\delta\\text{-}\\mathrm{sq}" },
           { label: "blue", labelClass: "blue", tex: wordPathFormulaTex(FIRST_BOUNDARY_WORDS) },
@@ -1761,10 +1762,10 @@
       }[value];
     }
 
-    function deltaIndex(value, perm, adjustment = 0) {
+    function deltaIndex(value, perm) {
       const position = perm.indexOf(value);
       const lowerToLeft = perm.slice(0, position).filter(other => other < value).length;
-      const shift = lowerToLeft + adjustment;
+      const shift = lowerToLeft;
       const base = deltaBase(value);
       if (shift === 0) return base;
       if (shift > 0) return `${base}+${shift}`;
@@ -1796,13 +1797,13 @@
     function edgeCoherence(startIndex, endIndex) {
       const a = data.perms[startIndex];
       const b = data.perms[endIndex];
-      const sourceIndex = inversionCount(a) < inversionCount(b) ? startIndex : endIndex;
+      const sourceIndex = inversionCount(a) > inversionCount(b) ? startIndex : endIndex;
       const targetIndex = sourceIndex === startIndex ? endIndex : startIndex;
       const sourcePerm = data.perms[sourceIndex];
       const targetPerm = data.perms[targetIndex];
       const swapPosition = firstDifference(sourcePerm, targetPerm);
-      const low = sourcePerm[swapPosition];
-      const high = sourcePerm[swapPosition + 1];
+      const high = sourcePerm[swapPosition];
+      const low = sourcePerm[swapPosition + 1];
       return {
         source: sourceIndex,
         target: targetIndex,
@@ -1811,10 +1812,10 @@
         targetPerm,
         low,
         high,
-        label: `δ-δ ${deltaIndex(low, sourcePerm)} ${deltaIndex(high, sourcePerm, -1)} ${deltaSymbol(low)} ${deltaSymbol(high)}`,
+        label: `δ-δ ${deltaIndex(low, sourcePerm)} ${deltaIndex(high, sourcePerm)} ${deltaSymbol(low)} ${deltaSymbol(high)}`,
         labelTex: hcDdTex(
           deltaIndex(low, sourcePerm),
-          deltaIndex(high, sourcePerm, -1),
+          deltaIndex(high, sourcePerm),
           deltaSymbolTex(low),
           deltaSymbolTex(high)
         ),
@@ -1838,13 +1839,13 @@
       const cycle = face.indices;
       const inversions = new Map(cycle.map(index => [index, inversionCount(data.perms[index])]));
       const source = cycle.reduce((best, index) =>
-        inversions.get(index) < inversions.get(best) ? index : best
-      );
-      const target = cycle.reduce((best, index) =>
         inversions.get(index) > inversions.get(best) ? index : best
       );
-      const clockwise = increasingArc(cycle, source, target, 1, inversions);
-      const counterClockwise = increasingArc(cycle, source, target, -1, inversions);
+      const target = cycle.reduce((best, index) =>
+        inversions.get(index) < inversions.get(best) ? index : best
+      );
+      const clockwise = decreasingArc(cycle, source, target, 1, inversions);
+      const counterClockwise = decreasingArc(cycle, source, target, -1, inversions);
       const pathEdges = [clockwise, counterClockwise]
         .map(path => path.map(([start, end]) => edgeCoherence(start, end)))
         .sort(comparePathEdges);
@@ -1861,21 +1862,21 @@
     }
 
     function comparePathEdges(left, right) {
-      return pathWord(left).localeCompare(pathWord(right));
+      return pathWord(right).localeCompare(pathWord(left));
     }
 
     function pathWord(pathEdges) {
       return pathEdges.map(edge => edge.swapIndex).join("");
     }
 
-    function increasingArc(cycle, source, target, step, inversions) {
+    function decreasingArc(cycle, source, target, step, inversions) {
       const arc = [];
       let cursor = cycle.indexOf(source);
       while (cycle[cursor] !== target) {
         const next = (cursor + step + cycle.length) % cycle.length;
         const from = cycle[cursor];
         const to = cycle[next];
-        if (inversions.get(to) !== inversions.get(from) + 1) return [];
+        if (inversions.get(to) !== inversions.get(from) - 1) return [];
         arc.push([from, to]);
         cursor = next;
       }
